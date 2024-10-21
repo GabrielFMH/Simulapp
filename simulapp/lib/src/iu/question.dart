@@ -22,6 +22,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
       title: 'Examen de Inglés',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        inputDecorationTheme: InputDecorationTheme(
+        inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
         ),
@@ -47,6 +49,8 @@ class MyApp extends StatelessWidget {
 }
 
 class ExamenScreen extends StatefulWidget {
+  const ExamenScreen({super.key});
+
   @override
   _ExamenScreenState createState() => _ExamenScreenState();
 }
@@ -61,7 +65,7 @@ class _ExamenScreenState extends State<ExamenScreen> {
 
   List<DocumentSnapshot> _preguntas = [];
   late Map<String, dynamic> _currentPregunta;
-  List<String?> _respuestasSeleccionadas = [];
+  final List<String?> _respuestasSeleccionadas = [];
   String? _respuestaSeleccionada;
 
   @override
@@ -130,9 +134,9 @@ class _ExamenScreenState extends State<ExamenScreen> {
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Examen de Inglés'),
+          title: const Text('Examen de Inglés'),
         ),
-        body: Center(
+        body: const Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -152,13 +156,13 @@ class _ExamenScreenState extends State<ExamenScreen> {
               TextFormField(
                 initialValue: _currentPregunta['enunciado'] ?? 'Cargando...',
                 readOnly: true,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                decoration: InputDecoration(
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                decoration: const InputDecoration(
                   labelText: 'Pregunta',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               Column(
                 children: (_currentPregunta['opciones'] as List<dynamic>).map((opcion) {
@@ -175,22 +179,22 @@ class _ExamenScreenState extends State<ExamenScreen> {
                 }).toList(),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               ElevatedButton(
                 onPressed: _respuestaSeleccionada != null ? _evaluarRespuesta : null,
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 16.0), backgroundColor: Colors.blueAccent,
-                  textStyle: TextStyle(fontSize: 18),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0), backgroundColor: Colors.blueAccent,
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
-                child: Text('Enviar respuesta'),
+                child: const Text('Enviar respuesta'),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               Text(
                 'Puntaje: $_puntaje',
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ],
           ),

@@ -21,6 +21,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,6 +37,8 @@ class MyApp extends StatelessWidget {
 }
 
 class AgregarPreguntaScreen extends StatefulWidget {
+  const AgregarPreguntaScreen({super.key});
+
   @override
   _AgregarPreguntaScreenState createState() => _AgregarPreguntaScreenState();
 }
@@ -89,7 +93,7 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
         _tipoController.clear();
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Pregunta agregada exitosamente')),
+          const SnackBar(content: Text('Pregunta agregada exitosamente')),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -103,7 +107,7 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar Pregunta'),
+        title: const Text('Agregar Pregunta'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -113,7 +117,7 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
             children: [
               TextFormField(
                 controller: _enunciadoController,
-                decoration: InputDecoration(labelText: 'Enunciado'),
+                decoration: const InputDecoration(labelText: 'Enunciado'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa el enunciado';
@@ -123,7 +127,7 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
               ),
               TextFormField(
                 controller: _examenController,
-                decoration: InputDecoration(labelText: 'Examen'),
+                decoration: const InputDecoration(labelText: 'Examen'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa el examen';
@@ -143,10 +147,10 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
                     return null;
                   },
                 );
-              }).toList(),
+              }),
               TextFormField(
                 controller: _respuestaController,
-                decoration: InputDecoration(labelText: 'Respuesta correcta'),
+                decoration: const InputDecoration(labelText: 'Respuesta correcta'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa la respuesta correcta';
@@ -156,7 +160,7 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
               ),
               TextFormField(
                 controller: _tipoController,
-                decoration: InputDecoration(labelText: 'Tipo'),
+                decoration: const InputDecoration(labelText: 'Tipo'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa el tipo de pregunta';
@@ -164,10 +168,10 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _agregarPregunta,
-                child: Text('Agregar Pregunta'),
+                child: const Text('Agregar Pregunta'),
               ),
             ],
           ),

@@ -4,13 +4,15 @@ import 'package:table_calendar/table_calendar.dart';
 import 'examlist.dart'; // Importa el archivo principal que contiene las listas de exámenes
 
 class CalendarPage extends StatefulWidget {
+  const CalendarPage({super.key});
+
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
   late Map<DateTime, List<Examen>> _events;
-  CalendarFormat _calendarFormat = CalendarFormat.month;
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
@@ -26,7 +28,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
     // Añadir los exámenes Cambridge con fechas al azar
     for (var examen in cambridgeExamenes) {
-      DateTime examDate = DateTime(2024, 6, 15); // Fecha fija de ejemplo para Cambridge
+      DateTime examDate =
+          DateTime(2024, 6, 15); // Fecha fija de ejemplo para Cambridge
       if (events[examDate] == null) {
         events[examDate] = [];
       }
@@ -35,7 +38,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
     // Añadir los exámenes Michigan con fechas al azar
     for (var examen in michiganExamenes) {
-      DateTime examDate = DateTime(2024, 7, 20); // Fecha fija de ejemplo para Michigan
+      DateTime examDate =
+          DateTime(2024, 7, 20); // Fecha fija de ejemplo para Michigan
       if (events[examDate] == null) {
         events[examDate] = [];
       }
@@ -44,7 +48,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
     // Añadir los exámenes TOEFL con fechas al azar
     for (var examen in toeflExamenes) {
-      DateTime examDate = DateTime(2024, 8, 10); // Fecha fija de ejemplo para TOEFL
+      DateTime examDate =
+          DateTime(2024, 8, 10); // Fecha fija de ejemplo para TOEFL
       if (events[examDate] == null) {
         events[examDate] = [];
       }
@@ -82,7 +87,7 @@ class _CalendarPageState extends State<CalendarPage> {
             eventLoader: (day) {
               return _events[day] ?? [];
             },
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               todayDecoration: BoxDecoration(
                 color: AppColors.color1,
                 shape: BoxShape.circle,
@@ -117,11 +122,11 @@ class _CalendarPageState extends State<CalendarPage> {
         return ListTile(
           title: Text(
             examen.nombre,
-            style: TextStyle(color: AppColors.color2),
+            style: const TextStyle(color: AppColors.color2),
           ),
           subtitle: Text(
             examen.descripcion,
-            style: TextStyle(color: AppColors.color2),
+            style: const TextStyle(color: AppColors.color2),
           ),
         );
       },

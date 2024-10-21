@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ExamenesScreen(),
+      home: const ExamenesScreen(),
       theme: ThemeData(
         primaryColor: AppColors.color1, // Color primario
         scaffoldBackgroundColor: AppColors.white, // Color de fondo
@@ -47,7 +47,7 @@ class ExamenesScreen extends StatefulWidget {
 }
 
 class _ExamenesScreenState extends State<ExamenesScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   int _selectedIndex = 0; // Controlador de índice para la barra de navegación
 
   // Listas de exámenes para cada sección
@@ -170,7 +170,7 @@ class _ExamenesScreenState extends State<ExamenesScreen> {
             _buildExamenesView(), // Vista de exámenes
             Container(), // Placeholder para Inicio
             Container(), // Placeholder para Ubicación
-            PricesPage(), // Navegar a PricesPage
+            const PricesPage(), // Navegar a PricesPage
             CalendarPage(), // Nueva vista para Calendario
           ],
         ),
@@ -295,7 +295,7 @@ class ExamenesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (examenes.isEmpty) {
-      return Center(
+      return const Center(
         child: Text(
           'No se encontraron exámenes',
           style: TextStyle(color: AppColors.color2, fontSize: 18),
