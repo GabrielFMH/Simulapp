@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 // import 'app_colors.dart';
 
 class PricesPage extends StatelessWidget {
-  const PricesPage({Key? key}) : super(key: key);
+  const PricesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +15,8 @@ class PricesPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Row(
-          children: const [
+        title: const Row(
+          children: [
             Icon(
               Icons.shopping_cart_outlined,
               color: Colors.orange,
