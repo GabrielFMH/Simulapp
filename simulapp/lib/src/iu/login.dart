@@ -51,34 +51,72 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: loginUser,
-              child: Text('Login'),
-            ),
-            TextButton(
-              onPressed: () {
-                // Navegar a la página de registro
-                Navigator.push(context, 
-                  MaterialPageRoute(builder: (context) => RegisterPage()));
-              },
-              child: Text('No account? Register here'),
-            ),
-          ],
+      appBar: AppBar(
+        title: Text('Login'),
+        backgroundColor: Colors.deepPurple,  // Color del AppBar
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.lock_outline, size: 100, color: Colors.deepPurple),  // Icono decorativo
+              SizedBox(height: 20),
+              Text(
+                'Welcome Back!',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock),
+                ),
+              ),
+              SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: loginUser,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,  // Color del botón
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text('Login', style: TextStyle(fontSize: 18)),
+              ),
+              SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  // Navegar a la página de registro
+                  Navigator.push(context, 
+                    MaterialPageRoute(builder: (context) => RegisterPage()));
+                },
+                child: Text(
+                  'No account? Register here',
+                  style: TextStyle(color: Colors.deepPurple),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
