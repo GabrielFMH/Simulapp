@@ -54,8 +54,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
-        backgroundColor: Colors.deepPurple,  // Color del AppBar
+        title: const Text('SimulApp'),
+        backgroundColor: Colors.lightBlue,  // Color celeste para el AppBar
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -63,14 +63,14 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.lock_outline, size: 100, color: Colors.deepPurple),  // Icono decorativo
+              const Icon(Icons.lock_outline, size: 100, color: Colors.blue),  // Icono azul
               const SizedBox(height: 20),
               const Text(
                 'Welcome Back!',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
+                  color: Colors.blue,  // Texto azul
                 ),
               ),
               const SizedBox(height: 20),
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: loginUser,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,  // Color del botón
+                  backgroundColor: Colors.lightBlue,  // Color celeste para el botón
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 child: const Text(
                   'No account? Register here',
-                  style: TextStyle(color: Colors.deepPurple),
+                  style: TextStyle(color: Colors.blue),  // Texto del botón azul
                 ),
               ),
             ],

@@ -49,9 +49,10 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
 
   // Controladores para los campos del formulario
   final TextEditingController _enunciadoController = TextEditingController();
-  final TextEditingController _examenController = TextEditingController();
   final TextEditingController _respuestaController = TextEditingController();
   final TextEditingController _tipoController = TextEditingController();
+  final TextEditingController _puntosController = TextEditingController();
+  final TextEditingController _tiempoLimiteController = TextEditingController();
   final List<TextEditingController> _opcionesControllers = [
     TextEditingController(),
     TextEditingController(),
@@ -62,35 +63,43 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
   @override
   void dispose() {
     _enunciadoController.dispose();
-    _examenController.dispose();
     _respuestaController.dispose();
     _tipoController.dispose();
+    _puntosController.dispose();
+    _tiempoLimiteController.dispose();
     for (var controller in _opcionesControllers) {
       controller.dispose();
     }
     super.dispose();
   }
 
-  // Función para agregar una nueva pregunta a Firestore
+  // Función para agregar una nueva pregunta a la subcolección 'preguntas'
   void _agregarPregunta() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await _firestore.collection('preguntas').add({
+        // Reemplazar 'examenID' con el ID del examen correspondiente
+        await _firestore
+            .collection('examenes')  // Colección de exámenes
+            .doc('examenID')  // Documento del examen (reemplazar con el ID dinámico)
+            .collection('preguntas')  // Subcolección de preguntas
+            .add({
           'enunciado': _enunciadoController.text,
-          'examen': _examenController.text,
           'opciones': _opcionesControllers.map((c) => c.text).toList(),
           'respuesta': _respuestaController.text,
           'tipo': _tipoController.text,
+          'puntos': int.tryParse(_puntosController.text) ?? 0,
+          'tiempo_limite': int.tryParse(_tiempoLimiteController.text) ?? 30,
         });
 
         // Limpiar los campos después de agregar la pregunta
         _enunciadoController.clear();
-        _examenController.clear();
         for (var controller in _opcionesControllers) {
           controller.clear();
         }
         _respuestaController.clear();
         _tipoController.clear();
+        _puntosController.clear();
+        _tiempoLimiteController.clear();
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Pregunta agregada exitosamente')),
@@ -125,16 +134,6 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _examenController,
-                decoration: const InputDecoration(labelText: 'Examen'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa el examen';
-                  }
-                  return null;
-                },
-              ),
               ..._opcionesControllers.asMap().entries.map((entry) {
                 int index = entry.key;
                 return TextFormField(
@@ -150,7 +149,8 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
               }),
               TextFormField(
                 controller: _respuestaController,
-                decoration: const InputDecoration(labelText: 'Respuesta correcta'),
+                decoration:
+                    const InputDecoration(labelText: 'Respuesta correcta'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa la respuesta correcta';
@@ -164,6 +164,28 @@ class _AgregarPreguntaScreenState extends State<AgregarPreguntaScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa el tipo de pregunta';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _puntosController,
+                decoration: const InputDecoration(labelText: 'Puntos'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingresa los puntos';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _tiempoLimiteController,
+                decoration: const InputDecoration(labelText: 'Tiempo límite (segundos)'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingresa el tiempo límite';
                   }
                   return null;
                 },

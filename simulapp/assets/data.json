@@ -1,0 +1,19 @@
+[
+    {
+      "examenId": "KoXMWUvT8Udqf1TWaH2b",
+      "preguntas": [
+        {
+          "enunciado": "Pregunta 1",
+          "opciones": ["Opción A", "Opción B", "Opción C", "Opción D"],
+          "respuesta": "Opción A",
+          "tipo": "multiple_choice"
+        },
+        {
+          "enunciado": "Pregunta 2",
+          "opciones": ["Opción 1", "Opción 2", "Opción 3", "Opción 4"],
+          "respuesta": "Opción 2",
+          "tipo": "multiple_choice"
+        }
+      ]
+    }
+]

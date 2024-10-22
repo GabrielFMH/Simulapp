@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'prices.dart';
-import 'calendar.dart'; // Importa el archivo calendar.dart
+import 'calendar.dart'; // Importa el archivo calendar.dartz
 
 class AppColors {
   static const Color color1 = Color(0xFF377899); // Color 1
