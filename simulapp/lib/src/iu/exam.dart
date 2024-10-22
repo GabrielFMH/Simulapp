@@ -92,7 +92,7 @@ class ExamenDetalleScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PreguntasScreen(examenId: 'KoXMWUvT8UdQf1TWaH2b'),
+                          builder: (context) => PreguntasScreen(examenId: 'KoXMWUvT8UdQf1TWaH2b/preguntas/tBr2dx5QT2mRRSKx71QN'),
                         ),
                       );
                     },
