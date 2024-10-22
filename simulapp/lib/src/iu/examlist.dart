@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'maps.dart'; // Asegúrate de importar tu archivo maps.dart
 import 'prices.dart';
-import 'calendar.dart'; // Importa el archivo calendar.dartz
+import 'calendar.dart'; // Importa el archivo calendar.dart
+import 'exam.dart'; // Importa la pantalla de detalles
+
 
 class AppColors {
   static const Color color1 = Color(0xFF377899); // Color 1
@@ -15,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const ExamenesScreen(),
+      home: ExamenesScreen(),
       theme: ThemeData(
         primaryColor: AppColors.color1, // Color primario
         scaffoldBackgroundColor: AppColors.white, // Color de fondo
@@ -47,7 +50,7 @@ class ExamenesScreen extends StatefulWidget {
 }
 
 class _ExamenesScreenState extends State<ExamenesScreen> {
-  final TextEditingController _searchController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
   int _selectedIndex = 0; // Controlador de índice para la barra de navegación
 
   // Listas de exámenes para cada sección
@@ -144,7 +147,7 @@ class _ExamenesScreenState extends State<ExamenesScreen> {
     });
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3, // Número de pestañas (Cambridge, Michigan, Toefl)
@@ -169,8 +172,8 @@ class _ExamenesScreenState extends State<ExamenesScreen> {
           children: [
             _buildExamenesView(), // Vista de exámenes
             Container(), // Placeholder para Inicio
-            Container(), // Placeholder para Ubicación
-            const PricesPage(), // Navegar a PricesPage
+            MapScreen(), // Aquí se muestra la pantalla del mapa (ubicación)
+            PricesPage(), // Navegar a PricesPage
             CalendarPage(), // Nueva vista para Calendario
           ],
         ),
@@ -287,6 +290,7 @@ List<Examen> toeflExamenes = [
 ];
 
 // Widget que muestra la lista de exámenes
+// Widget que muestra la lista de exámenes
 class ExamenesList extends StatelessWidget {
   final List<Examen> examenes;
 
@@ -295,7 +299,7 @@ class ExamenesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (examenes.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           'No se encontraron exámenes',
           style: TextStyle(color: AppColors.color2, fontSize: 18),
@@ -329,9 +333,24 @@ class ExamenesList extends StatelessWidget {
             ),
             trailing: const Icon(Icons.arrow_forward_ios,
                 color: AppColors.white), // Color del icono
+            onTap: () {
+              // Navegar a la pantalla de detalles usando ExamenDetalleScreen de exam.dart
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ExamenDetalleScreen(
+                    nombre: examen.nombre,          // Pasar el nombre del examen
+                    descripcion: examen.descripcion, // Pasar la descripción del examen
+                    imagen: examen.imagen, examenId: '',          // Pasar la imagen del examen
+                  ),
+                ),
+              );
+            },
           ),
         );
       },
     );
   }
 }
+
+
