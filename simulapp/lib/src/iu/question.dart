@@ -78,13 +78,13 @@ class _ExamenScreenState extends State<ExamenScreen> {
   void _cargarPreguntas() async {
     try {
       // Filtrar preguntas por el tipo de examen
-      print('Cargando preguntas para el examen: ${widget.tipoExamen}');
+      print('Cargando preguntas para el examen: \${widget.tipoExamen}');
       QuerySnapshot querySnapshot = await _firestore
           .collection('preguntas')
           .where('examen', isEqualTo: widget.tipoExamen)
           .get();
 
-      print('Número de preguntas encontradas: ${querySnapshot.docs.length}');
+      print('Número de preguntas encontradas: \${querySnapshot.docs.length}');
 
       setState(() {
         _preguntas = querySnapshot.docs;
@@ -163,55 +163,48 @@ class _ExamenScreenState extends State<ExamenScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pregunta ${_currentQuestionIndex + 1} de $_totalPreguntas'),
+        title: Text('Pregunta \${_currentQuestionIndex + 1} de \$_totalPreguntas'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                initialValue: enunciado,
-                readOnly: true,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                decoration: const InputDecoration(
-                  labelText: 'Pregunta',
-                  border: OutlineInputBorder(),
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              enunciado,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Column(
+              children: (_currentPregunta['opciones'] as List<dynamic>? ?? []).map((opcion) {
+                return RadioListTile<String>(
+                  title: Text(opcion),
+                  value: opcion,
+                  groupValue: _respuestaSeleccionada,
+                  onChanged: (value) {
+                    setState(() {
+                      _respuestaSeleccionada = value;
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _respuestaSeleccionada != null ? _evaluarRespuesta : null,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                backgroundColor: Colors.blueAccent,
+                textStyle: const TextStyle(fontSize: 18),
               ),
-              const SizedBox(height: 20),
-              Column(
-                children: (_currentPregunta['opciones'] as List<dynamic>? ?? []).map((opcion) {
-                  return RadioListTile<String>(
-                    title: Text(opcion),
-                    value: opcion,
-                    groupValue: _respuestaSeleccionada,
-                    onChanged: (value) {
-                      setState(() {
-                        _respuestaSeleccionada = value;
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _respuestaSeleccionada != null ? _evaluarRespuesta : null,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  backgroundColor: Colors.blueAccent,
-                  textStyle: const TextStyle(fontSize: 18),
-                ),
-                child: const Text('Enviar respuesta'),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Puntaje: $_puntaje',
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
+              child: const Text('Enviar respuesta'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Puntaje: \$_puntaje',
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
         ),
       ),
     );
