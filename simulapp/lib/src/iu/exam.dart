@@ -4,11 +4,11 @@ import 'prices.dart';
 import 'calendar.dart'; // Importa el archivo calendar.dart
 import 'examlist.dart'; // Importa el archivo examlist.dart
 import 'preguntas_screen.dart';
-
+import 'question.dart'; // Importa el archivo question.dart para acceder a ExamenScreen
 
 
 class ExamenDetalleScreen extends StatelessWidget {
-    final String nombre;
+  final String nombre;
   final String descripcion;
   final String imagen;
   final String examenId; // Asegúrate de tener el ID del examen
@@ -20,6 +20,7 @@ class ExamenDetalleScreen extends StatelessWidget {
     required this.imagen,
     required this.examenId, // Recibir el ID del examen
   }) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     // Aquí puedes definir descripciones adicionales para cada examen, basándote en el nombre del examen
@@ -89,10 +90,11 @@ class ExamenDetalleScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      // Redirigir a ExamenScreen (question.dart) para el modo contrareloj
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PreguntasScreen(examenId: 'KoXMWUvT8UdQf1TWaH2b/preguntas/tBr2dx5QT2mRRSKx71QN'),
+                          builder: (context) => const ExamenScreen(), // Navegar a la pantalla de preguntas
                         ),
                       );
                     },
@@ -110,10 +112,11 @@ class ExamenDetalleScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      // Redirigir a ExamenScreen (question.dart) para el modo prueba
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PreguntasScreen(examenId: examenId),
+                          builder: (context) => const ExamenScreen(), // Navegar a la pantalla de preguntas
                         ),
                       );
                     },
