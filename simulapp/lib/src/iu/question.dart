@@ -163,7 +163,7 @@ class _ExamenScreenState extends State<ExamenScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pregunta \${_currentQuestionIndex + 1} de \$_totalPreguntas'),
+        title: Text('Pregunta ${_currentQuestionIndex + 1} de $_totalPreguntas'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -201,7 +201,7 @@ class _ExamenScreenState extends State<ExamenScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Puntaje: \$_puntaje',
+              'Puntaje: $_puntaje',
               style: const TextStyle(fontSize: 16),
             ),
           ],
