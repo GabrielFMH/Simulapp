@@ -15,7 +15,7 @@ dependencies:
   url_launcher: ^6.0.20
   flutter_event_calendar: ^1.0.0
   google_maps_flutter: ^2.2.0  
-  location: ^4.4.0  
+  location: ^5.0.0  
   http: ^0.13.3
   geocoding: ^2.0.2 
 
