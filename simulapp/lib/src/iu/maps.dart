@@ -23,11 +23,12 @@ class _MapScreenState extends State<MapScreen> {
   TextEditingController originController = TextEditingController();
   TextEditingController destinationController = TextEditingController();
 
+  bool isMapReady = false;  // Bandera para indicar si el mapa está listo
+
   @override
   void initState() {
     super.initState();
     _addRedMarkers();
-    _getCurrentLocation(); // Obtener la ubicación al iniciar
   }
 
   void _addRedMarkers() {
@@ -81,32 +82,46 @@ class _MapScreenState extends State<MapScreen> {
 
     try {
       final response = await http.get(Uri.parse(url));
-      final jsonData = json.decode(response.body);
 
-      if (jsonData['status'] == 'OK') {
-        var points = jsonData['routes'][0]['overview_polyline']['points'];
-        List<LatLng> polylineCoordinates = _decodePolyline(points);
+      // Verifica el estado de la respuesta HTTP
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        print('Response body: $jsonData'); // Muestra la respuesta completa para depuración
 
-        setState(() {
-          _polylines.clear(); // Limpiar rutas anteriores
-          _polylines.add(
-            Polyline(
-              polylineId: const PolylineId('route1'),
-              points: polylineCoordinates,
-              color: Colors.blue,
-              width: 5,
-            ),
+        if (jsonData['status'] == 'OK') {
+          var points = jsonData['routes'][0]['overview_polyline']['points'];
+          List<LatLng> polylineCoordinates = _decodePolyline(points);
+
+          setState(() {
+            _polylines.clear(); // Limpiar rutas anteriores
+            _polylines.add(
+              Polyline(
+                polylineId: const PolylineId('route1'),
+                points: polylineCoordinates,
+                color: Colors.blue,
+                width: 5,
+              ),
+            );
+          });
+        } else {
+          // Muestra un error si el estado de la respuesta no es 'OK'
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Error al obtener la ruta: ${jsonData['status']}")),
           );
-        });
+        }
       } else {
+        // Si la respuesta no es 200, muestra el código de error y el mensaje
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error al obtener la ruta: ${jsonData['status']}")),
+          SnackBar(content: Text("Error en la respuesta HTTP: ${response.statusCode}")),
         );
+        print("Error HTTP: ${response.statusCode} - ${response.body}");
       }
     } catch (e) {
+      // Muestra el error si algo sale mal con la solicitud
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error durante la solicitud: $e")),
       );
+      print("Error durante la solicitud: $e");
     }
   }
 
@@ -143,15 +158,26 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
+    // Verifica que el mapa esté listo antes de obtener la ubicación
+    if (!isMapReady) {
+      print("El mapa no está listo todavía.");
+      return; // No intentar obtener la ubicación si el mapa no está listo
+    }
+
     Location location = Location();
     try {
       var locationData = await location.getLocation();
       _currentPosition = LatLng(locationData.latitude!, locationData.longitude!);
-      mapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: _currentPosition!, zoom: 15),
-        ),
-      );
+
+      // Verifica si el mapController está inicializado antes de usarlo
+      if (mapController != null) {
+        mapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(target: _currentPosition!, zoom: 15),
+          ),
+        );
+      }
+
       setState(() {
         _markers.add(
           Marker(
@@ -176,6 +202,12 @@ class _MapScreenState extends State<MapScreen> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    setState(() {
+      isMapReady = true;  // El mapa está listo
+    });
+
+    // Llamar a _getCurrentLocation una vez que el mapa esté listo
+    _getCurrentLocation();
   }
 
   @override
