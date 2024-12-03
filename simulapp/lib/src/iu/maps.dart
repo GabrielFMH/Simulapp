@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:location/location.dart'; // Para obtener la ubicación actual
-import 'examlist.dart'; // Para obtener la ubicación actual
-
+import 'package:location/location.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -16,11 +14,11 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
   final Set<Marker> _markers = {};
-  final Set<Polyline> _polylines = {}; // Conjunto de líneas para trazar rutas
+  final Set<Polyline> _polylines = {};
   LatLng _initialPosition = const LatLng(-12.046374, -77.042793); // Lima, Perú
-  LatLng? _currentPosition; // Almacena la ubicación actual del usuario
+  LatLng? _currentPosition;
 
-  MapType _currentMapType = MapType.normal; // Tipo de mapa (normal, satélite, etc.)
+  MapType _currentMapType = MapType.normal;
 
   TextEditingController originController = TextEditingController();
   TextEditingController destinationController = TextEditingController();
@@ -28,14 +26,11 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Agregar ubicaciones importantes como marcadores en rojo
     _addRedMarkers();
+    _getCurrentLocation(); // Obtener la ubicación al iniciar
   }
 
-  // Método para agregar los marcadores rojos en las ubicaciones importantes
   void _addRedMarkers() {
-    // Marcador 1: Cnel. Bustios 146, Tacna 23003
     _markers.add(
       Marker(
         markerId: const MarkerId('bustios'),
@@ -47,8 +42,6 @@ class _MapScreenState extends State<MapScreen> {
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       ),
     );
-
-    // Marcador 2: Frente al óvalo Callao, Av. Grau s/n, Tacna 23003
     _markers.add(
       Marker(
         markerId: const MarkerId('ovalo_callao'),
@@ -62,12 +55,29 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  // Método para trazar la ruta
   Future<void> _drawRoute(String origin, String destination) async {
-    String apiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Reemplaza con tu propia clave de API
+    if (origin.isEmpty && _currentPosition == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Por favor, ingresa un origen o habilita tu ubicación actual.")),
+      );
+      return;
+    }
 
+    if (destination.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Por favor, ingresa un destino.")),
+      );
+      return;
+    }
+
+    // Usar la ubicación actual si el campo de origen está vacío
+    String resolvedOrigin = origin.isEmpty
+        ? '${_currentPosition!.latitude},${_currentPosition!.longitude}'
+        : origin;
+
+    String apiKey = 'AIzaSyAiJofFoIKKglajZx-J0TKd7ppIKHjxfBA';
     String url =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=$origin&destination=$destination&key=$apiKey';
+        'https://maps.googleapis.com/maps/api/directions/json?origin=$resolvedOrigin&destination=$destination&key=$apiKey';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -78,6 +88,7 @@ class _MapScreenState extends State<MapScreen> {
         List<LatLng> polylineCoordinates = _decodePolyline(points);
 
         setState(() {
+          _polylines.clear(); // Limpiar rutas anteriores
           _polylines.add(
             Polyline(
               polylineId: const PolylineId('route1'),
@@ -88,14 +99,17 @@ class _MapScreenState extends State<MapScreen> {
           );
         });
       } else {
-        print("Error al obtener la ruta: ${jsonData['status']}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error al obtener la ruta: ${jsonData['status']}")),
+        );
       }
     } catch (e) {
-      print("Error durante la solicitud a la API de Google Directions: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error durante la solicitud: $e")),
+      );
     }
   }
 
-  // Método para decodificar la ruta polilinear
   List<LatLng> _decodePolyline(String encoded) {
     List<LatLng> polyline = [];
     int index = 0, len = encoded.length;
@@ -128,13 +142,10 @@ class _MapScreenState extends State<MapScreen> {
     return polyline;
   }
 
-  // Método para obtener la ubicación actual del usuario
   Future<void> _getCurrentLocation() async {
     Location location = Location();
-    LocationData locationData;
-
     try {
-      locationData = await location.getLocation();
+      var locationData = await location.getLocation();
       _currentPosition = LatLng(locationData.latitude!, locationData.longitude!);
       mapController.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -142,15 +153,12 @@ class _MapScreenState extends State<MapScreen> {
         ),
       );
       setState(() {
-        // Añadir un marcador rojo en la ubicación actual
         _markers.add(
           Marker(
             markerId: const MarkerId('currentLocation'),
             position: _currentPosition!,
             icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-            infoWindow: const InfoWindow(
-              title: 'Mi ubicación',
-            ),
+            infoWindow: const InfoWindow(title: 'Mi ubicación'),
           ),
         );
       });
@@ -159,14 +167,13 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  // Cambiar el tipo de mapa
   void _changeMapType() {
     setState(() {
-      _currentMapType = _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
+      _currentMapType =
+          _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
     });
   }
 
-  // Método que se ejecuta cuando el mapa es creado
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -180,95 +187,35 @@ class _MapScreenState extends State<MapScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.map),
-            onPressed: _changeMapType, // Cambiar el tipo de mapa
+            onPressed: _changeMapType,
           ),
         ],
       ),
       body: Column(
         children: [
-          // Contenedor con buscadores fuera del mapa
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
-                // Caja de texto para la ubicación de origen
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.location_pin, color: Colors.grey),
-                      Expanded(
-                        child: TextField(
-                          controller: originController,
-                          decoration: const InputDecoration(
-                            hintText: "Ubicación de origen",
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildInputField(Icons.location_pin, "Ubicación de origen", originController),
                 const SizedBox(height: 10),
-                // Caja de texto para la ubicación de destino
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.search, color: Colors.grey),
-                      Expanded(
-                        child: TextField(
-                          controller: destinationController,
-                          decoration: const InputDecoration(
-                            hintText: "Buscar destino",
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildInputField(Icons.search, "Buscar destino", destinationController),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    // Llamar al método para trazar la ruta con los valores ingresados
                     _drawRoute(originController.text, destinationController.text);
                   },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    backgroundColor: Colors.black, // Color de fondo
+                    backgroundColor: Colors.black,
                   ),
                   child: const Text("Buscar Ruta"),
                 ),
               ],
             ),
           ),
-
-          // Contenedor que contiene el mapa (no ocupa toda la pantalla)
           Expanded(
             child: Container(
               margin: const EdgeInsets.all(10),
@@ -282,21 +229,46 @@ class _MapScreenState extends State<MapScreen> {
                   zoom: 12,
                 ),
                 myLocationEnabled: true,
-                myLocationButtonEnabled: false, // Quitamos el botón nativo para usar nuestro propio botón
+                myLocationButtonEnabled: false,
                 markers: _markers,
-                polylines: _polylines, // Aquí se añaden las polylines para las rutas
-                mapType: _currentMapType, // Tipo de mapa dinámico
+                polylines: _polylines,
+                mapType: _currentMapType,
               ),
             ),
           ),
         ],
       ),
-      // Botón flotante para obtener la ubicación actual
       floatingActionButton: FloatingActionButton(
         onPressed: _getCurrentLocation,
         child: const Icon(Icons.my_location),
-        backgroundColor: Colors.red, // Marcará la ubicación con un marcador rojo
+        backgroundColor: Colors.red,
         tooltip: 'Ver mi ubicación',
+      ),
+    );
+  }
+
+  Widget _buildInputField(
+      IconData icon, String hintText, TextEditingController controller) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          icon: Icon(icon, color: Colors.black),
+          hintText: hintText,
+          border: InputBorder.none,
+        ),
       ),
     );
   }
