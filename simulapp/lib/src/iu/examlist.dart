@@ -299,7 +299,7 @@ class ExamenesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (examenes.isEmpty) {
-      return Center(
+      return const Center(
         child: Text(
           'No se encontraron exámenes',
           style: TextStyle(color: AppColors.color2, fontSize: 18),
@@ -352,5 +352,3 @@ class ExamenesList extends StatelessWidget {
     );
   }
 }
-
-

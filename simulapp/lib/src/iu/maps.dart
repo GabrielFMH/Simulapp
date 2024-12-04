@@ -223,61 +223,70 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                _buildInputField(Icons.location_pin, "Ubicación de origen", originController),
-                const SizedBox(height: 10),
-                _buildInputField(Icons.search, "Buscar destino", destinationController),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    _drawRoute(originController.text, destinationController.text);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  children: [
+                    _buildInputField(Icons.location_pin, "Ubicación de origen", originController),
+                    const SizedBox(height: 10),
+                    _buildInputField(Icons.search, "Buscar destino", destinationController),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        _drawRoute(originController.text, destinationController.text);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        backgroundColor: Colors.black,
+                      ),
+                      child: const Text("Buscar Ruta"),
                     ),
-                    backgroundColor: Colors.black,
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1),
                   ),
-                  child: const Text("Buscar Ruta"),
+                  child: GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition: CameraPosition(
+                      target: _initialPosition,
+                      zoom: 12,
+                    ),
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: false,
+                    markers: _markers,
+                    polylines: _polylines,
+                    mapType: _currentMapType,
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 1),
-              ),
-              child: GoogleMap(
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: _initialPosition,
-                  zoom: 12,
-                ),
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                markers: _markers,
-                polylines: _polylines,
-                mapType: _currentMapType,
-              ),
+          Positioned(
+            left: 20,
+            bottom: 20,
+            child: FloatingActionButton(
+              onPressed: _getCurrentLocation,
+              child: const Icon(Icons.my_location),
+              backgroundColor: Colors.red,
+              tooltip: 'Ver mi ubicación',
             ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _getCurrentLocation,
-        child: const Icon(Icons.my_location),
-        backgroundColor: Colors.red,
-        tooltip: 'Ver mi ubicación',
-      ),
     );
   }
+
 
   Widget _buildInputField(
       IconData icon, String hintText, TextEditingController controller) {

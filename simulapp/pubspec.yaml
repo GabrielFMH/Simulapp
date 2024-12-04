@@ -1,4 +1,4 @@
-name: simulapp
+name: flutter_application_1
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
@@ -28,5 +28,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/
+    - assets/images/CAE.jpg
+    - assets/images/CPE.jpg
+    - assets/images/ECCE.jpg
+    - assets/images/ECPE.jpg
+    - assets/images/IBT.jpg
+    - assets/images/ITP.jpg
     - assets/data.json
