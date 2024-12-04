@@ -3,7 +3,7 @@ import 'maps.dart'; // Asegúrate de importar tu archivo maps.dart
 import 'prices.dart';
 import 'calendar.dart'; // Importa el archivo calendar.dart
 import 'exam.dart'; // Importa la pantalla de detalles
-
+import 'profile.dart';
 
 class AppColors {
   static const Color color1 = Color(0xFF377899); // Color 1
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ExamenesScreen(),
+      home: const ExamenesScreen(),
       theme: ThemeData(
         primaryColor: AppColors.color1, // Color primario
         scaffoldBackgroundColor: AppColors.white, // Color de fondo
@@ -50,7 +50,7 @@ class ExamenesScreen extends StatefulWidget {
 }
 
 class _ExamenesScreenState extends State<ExamenesScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   int _selectedIndex = 0; // Controlador de índice para la barra de navegación
 
   // Listas de exámenes para cada sección
@@ -147,7 +147,7 @@ class _ExamenesScreenState extends State<ExamenesScreen> {
     });
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3, // Número de pestañas (Cambridge, Michigan, Toefl)
@@ -171,10 +171,11 @@ class _ExamenesScreenState extends State<ExamenesScreen> {
           index: _selectedIndex,
           children: [
             _buildExamenesView(), // Vista de exámenes
-            Container(), // Placeholder para Inicio
-            MapScreen(), // Aquí se muestra la pantalla del mapa (ubicación)
-            PricesPage(), // Navegar a PricesPage
-            CalendarPage(), // Nueva vista para Calendario
+
+            UserProfile(), // Placeholder para Inicio
+            const MapScreen(), // Aquí se muestra la pantalla del mapa (ubicación)
+            const PricesPage(), // Navegar a PricesPage
+            const CalendarPage(), // Nueva vista para Calendario
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -299,7 +300,7 @@ class ExamenesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (examenes.isEmpty) {
-      return Center(
+      return const Center(
         child: Text(
           'No se encontraron exámenes',
           style: TextStyle(color: AppColors.color2, fontSize: 18),
@@ -339,9 +340,11 @@ class ExamenesList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ExamenDetalleScreen(
-                    nombre: examen.nombre,          // Pasar el nombre del examen
-                    descripcion: examen.descripcion, // Pasar la descripción del examen
-                    imagen: examen.imagen, examenId: '',          // Pasar la imagen del examen
+                    nombre: examen.nombre, // Pasar el nombre del examen
+                    descripcion:
+                        examen.descripcion, // Pasar la descripción del examen
+                    imagen: examen.imagen,
+                    examenId: '', // Pasar la imagen del examen
                   ),
                 ),
               );
@@ -352,5 +355,3 @@ class ExamenesList extends StatelessWidget {
     );
   }
 }
-
-

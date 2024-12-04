@@ -18,7 +18,7 @@ Future<void> initializeFirebase() async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -43,13 +43,15 @@ class MyApp extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: ExamenScreen(),
+      home: const ExamenScreen(
+        tipoExamen: '',
+      ),
     );
   }
 }
 
 class ExamenScreen extends StatefulWidget {
-  const ExamenScreen({super.key});
+  const ExamenScreen({super.key, required String tipoExamen});
 
   @override
   _ExamenScreenState createState() => _ExamenScreenState();
@@ -76,13 +78,15 @@ class _ExamenScreenState extends State<ExamenScreen> {
 
   void _cargarPreguntas() async {
     try {
-      QuerySnapshot querySnapshot = await _firestore.collection('preguntas').get();
+      QuerySnapshot querySnapshot =
+          await _firestore.collection('preguntas').get();
       setState(() {
         _preguntas = querySnapshot.docs;
         _totalPreguntas = _preguntas.length;
         _puntosPorPregunta = 20 / _totalPreguntas;
         if (_preguntas.isNotEmpty) {
-          _currentPregunta = _preguntas[_currentQuestionIndex].data() as Map<String, dynamic>;
+          _currentPregunta =
+              _preguntas[_currentQuestionIndex].data() as Map<String, dynamic>;
         }
         _isLoading = false;
       });
@@ -106,7 +110,8 @@ class _ExamenScreenState extends State<ExamenScreen> {
       setState(() {
         _currentQuestionIndex++;
         _respuestaSeleccionada = null;
-        _currentPregunta = _preguntas[_currentQuestionIndex].data() as Map<String, dynamic>;
+        _currentPregunta =
+            _preguntas[_currentQuestionIndex].data() as Map<String, dynamic>;
       });
     } else {
       _finalizarExamen();
@@ -120,7 +125,9 @@ class _ExamenScreenState extends State<ExamenScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ResumenScreen(
-          preguntas: _preguntas.map((doc) => doc.data() as Map<String, dynamic>).toList(),
+          preguntas: _preguntas
+              .map((doc) => doc.data() as Map<String, dynamic>)
+              .toList(),
           respuestasSeleccionadas: _respuestasSeleccionadas,
           puntaje: _puntaje,
           aprobado: aprobado,
@@ -144,7 +151,8 @@ class _ExamenScreenState extends State<ExamenScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pregunta ${_currentQuestionIndex + 1} de $_totalPreguntas'),
+        title:
+            Text('Pregunta ${_currentQuestionIndex + 1} de $_totalPreguntas'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -156,7 +164,8 @@ class _ExamenScreenState extends State<ExamenScreen> {
               TextFormField(
                 initialValue: _currentPregunta['enunciado'] ?? 'Cargando...',
                 readOnly: true,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 decoration: const InputDecoration(
                   labelText: 'Pregunta',
                   border: OutlineInputBorder(),
@@ -165,7 +174,8 @@ class _ExamenScreenState extends State<ExamenScreen> {
               const SizedBox(height: 20),
 
               Column(
-                children: (_currentPregunta['opciones'] as List<dynamic>).map((opcion) {
+                children: (_currentPregunta['opciones'] as List<dynamic>)
+                    .map((opcion) {
                   return RadioListTile<String>(
                     title: Text(opcion),
                     value: opcion,
@@ -182,9 +192,11 @@ class _ExamenScreenState extends State<ExamenScreen> {
               const SizedBox(height: 20),
 
               ElevatedButton(
-                onPressed: _respuestaSeleccionada != null ? _evaluarRespuesta : null,
+                onPressed:
+                    _respuestaSeleccionada != null ? _evaluarRespuesta : null,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0), backgroundColor: Colors.blueAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  backgroundColor: Colors.blueAccent,
                   textStyle: const TextStyle(fontSize: 18),
                 ),
                 child: const Text('Enviar respuesta'),

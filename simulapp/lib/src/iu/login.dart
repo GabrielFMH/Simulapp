@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   // Navegar a la página de registro
                   Navigator.push(context, 
-                    MaterialPageRoute(builder: (context) => RegisterPage()));
+                    MaterialPageRoute(builder: (context) => const RegisterPage()));
                 },
                 child: const Text(
                   'No account? Register here',

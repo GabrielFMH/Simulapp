@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../data/conection.dart'; // Verifica si esta conexión es necesaria
+// Verifica si esta conexión es necesaria
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +12,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(home: HomeScreen());
@@ -19,14 +21,16 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Importar JSON a Firestore')),
+      appBar: AppBar(title: const Text('Importar JSON a Firestore')),
       body: Center(
         child: ElevatedButton(
           onPressed: () => importData(context), // Pasa el contexto para mostrar el snackbar
-          child: Text('Importar Datos'),
+          child: const Text('Importar Datos'),
         ),
       ),
     );
@@ -47,12 +51,12 @@ class HomeScreen extends StatelessWidget {
 
       // Mostrar notificación de éxito
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Datos importados con éxito.')),
+        const SnackBar(content: Text('Datos importados con éxito.')),
       );
     } catch (e) {
       print('Error al importar los datos: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al importar los datos.')),
+        const SnackBar(content: Text('Error al importar los datos.')),
       );
     }
   }

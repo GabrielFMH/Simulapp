@@ -3,11 +3,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:location/location.dart'; // Para obtener la ubicación actual
-import 'examlist.dart'; // Para obtener la ubicación actual
+// Para obtener la ubicación actual
 
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({super.key});
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -17,7 +17,7 @@ class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
   final Set<Marker> _markers = {};
   final Set<Polyline> _polylines = {}; // Conjunto de líneas para trazar rutas
-  LatLng _initialPosition = const LatLng(-12.046374, -77.042793); // Lima, Perú
+  final LatLng _initialPosition = const LatLng(-12.046374, -77.042793); // Lima, Perú
   LatLng? _currentPosition; // Almacena la ubicación actual del usuario
 
   MapType _currentMapType = MapType.normal; // Tipo de mapa (normal, satélite, etc.)
@@ -201,13 +201,13 @@ class _MapScreenState extends State<MapScreen> {
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
                         blurRadius: 6,
-                        offset: Offset(0, 2),
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.location_pin, color: Colors.grey),
+                      const Icon(Icons.location_pin, color: Colors.grey),
                       Expanded(
                         child: TextField(
                           controller: originController,
@@ -231,13 +231,13 @@ class _MapScreenState extends State<MapScreen> {
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
                         blurRadius: 6,
-                        offset: Offset(0, 2),
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.search, color: Colors.grey),
+                      const Icon(Icons.search, color: Colors.grey),
                       Expanded(
                         child: TextField(
                           controller: destinationController,
@@ -294,9 +294,9 @@ class _MapScreenState extends State<MapScreen> {
       // Botón flotante para obtener la ubicación actual
       floatingActionButton: FloatingActionButton(
         onPressed: _getCurrentLocation,
-        child: const Icon(Icons.my_location),
         backgroundColor: Colors.red, // Marcará la ubicación con un marcador rojo
         tooltip: 'Ver mi ubicación',
+        child: const Icon(Icons.my_location),
       ),
     );
   }
