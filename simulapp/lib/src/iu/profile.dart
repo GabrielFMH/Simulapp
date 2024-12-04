@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
@@ -24,6 +25,11 @@ class UserProfile extends StatelessWidget {
     // Referencia al documento del usuario en Firestore
     final userDoc =
         FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+
+    // Referencia a los exámenes del usuario en Firestore
+    final historialRef = FirebaseFirestore.instance
+        .collection('historial')
+        .where('userId', isEqualTo: currentUser.uid);
 
     return Scaffold(
       appBar: AppBar(
@@ -75,7 +81,7 @@ class UserProfile extends StatelessWidget {
                 Text(
                   username,
                   style: const TextStyle(
-                      fontSize: 24,
+                      fontSize: 26,
                       fontWeight: FontWeight.bold,
                       color: Colors.blueAccent),
                   textAlign: TextAlign.center,
@@ -106,61 +112,71 @@ class UserProfile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Simulacros recientes
-                Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection(
-                            'historial') // Asegúrate del nombre correcto
-                        .where('userId', isEqualTo: currentUser.uid)
-                        .orderBy('fecha', descending: true)
-                        .limit(3) // Mostrar solo los últimos 3
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
+                // Mostrar los simulacros recientes
+                StreamBuilder<QuerySnapshot>(
+                  stream: historialRef.snapshots(),
+                  builder: (context, historialSnapshot) {
+                    if (historialSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (!historialSnapshot.hasData ||
+                        historialSnapshot.data!.docs.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'No hay simulacros recientes.',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    }
 
-                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                        return const Center(
-                          child: Text(
-                            'No hay simulacros recientes',
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.black54),
-                          ),
-                        );
-                      }
+                    final historial = historialSnapshot.data!.docs.map((doc) {
+                      final examen = doc.data() as Map<String, dynamic>;
+                      final fecha = (examen['fecha'] as Timestamp).toDate();
+                      return {
+                        'nombreExamen': examen['nombreExamen'] ?? 'Desconocido',
+                        'fecha': fecha,
+                      };
+                    }).toList();
 
-                      final simulacros = snapshot.data!.docs;
-
-                      return ListView.builder(
-                        itemCount: simulacros.length,
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: historial.length,
                         itemBuilder: (context, index) {
-                          final simulacro =
-                              simulacros[index].data() as Map<String, dynamic>;
-                          final String examenId =
-                              simulacro['examenId'] ?? 'ID desconocido';
-                          final DateTime? fecha = simulacro['fecha'] != null
-                              ? (simulacro['fecha'] as Timestamp).toDate()
-                              : null;
-
-                          return ListTile(
-                            leading: const Icon(Icons.quiz, color: Colors.blueAccent),
-                            title: Text(
-                              'Examen: $examenId',
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              'Fecha: ${fecha != null ? fecha.toLocal().toString().split(' ')[0] : 'Desconocida'}',
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.black54),
+                          final examen = historial[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Card(
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.all(16),
+                                title: Text(
+                                  examen['nombreExamen'],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  DateFormat(
+                                          'd \'de\' MMMM \'de\' yyyy, h:mm:ss a \'UTC-5\'')
+                                      .format(examen['fecha']),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ),
                             ),
                           );
                         },
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -169,10 +185,4 @@ class UserProfile extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: UserProfile(),
-  ));
 }
