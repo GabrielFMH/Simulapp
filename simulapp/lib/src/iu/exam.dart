@@ -1,29 +1,52 @@
 import 'package:flutter/material.dart';
-import 'maps.dart'; // Asegúrate de importar tu archivo maps.dart
+import 'package:cloud_firestore/cloud_firestore.dart'; // Para Firebase Firestore
+import 'package:firebase_auth/firebase_auth.dart'; // Para obtener el usuario logueado
+import 'maps.dart';
 import 'prices.dart';
-import 'calendar.dart'; // Importa el archivo calendar.dart
-import 'examlist.dart'; // Importa el archivo examlist.dart
-import 'question.dart'; // Importa el archivo question.dart para acceder a ExamenScreen
+import 'calendar.dart';
+import 'examlist.dart';
+import 'question.dart';
 
 class ExamenDetalleScreen extends StatelessWidget {
   final String nombre;
   final String descripcion;
   final String imagen;
-  final String examenId; // Asegúrate de tener el ID del examen
+  final String examenId;
 
   const ExamenDetalleScreen({
     Key? key,
     required this.nombre,
     required this.descripcion,
     required this.imagen,
-    required this.examenId, // Recibir el ID del examen
+    required this.examenId,
   }) : super(key: key);
+
+  Future<void> registrarEnHistorial(String tipoExamen, String modo) async {
+    try {
+      final User? user =
+          FirebaseAuth.instance.currentUser; // Obtener usuario logueado
+      if (user == null) {
+        throw Exception('No user logged in');
+      }
+      final String userId = user.uid;
+
+      await FirebaseFirestore.instance.collection('historial').add({
+        'userId': userId,
+        'examenId': examenId,
+        'nombreExamen': nombre,
+        'fecha': DateTime.now(),
+        'modo': modo, // Contrareloj o Modo Prueba
+        'tipoExamen': tipoExamen,
+      });
+      print('Registro guardado en historial.');
+    } catch (e) {
+      print('Error al guardar en historial: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     String descripcionCompleta = descripcion;
-
-    // Mapeo de nombres a tipos de examen para coincidir con Firebase
     String tipoExamen = '';
 
     if (nombre == 'C1 Advanced (CAE)') {
@@ -71,11 +94,13 @@ class ExamenDetalleScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      await registrarEnHistorial(tipoExamen, 'Contrareloj');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ExamenScreen(tipoExamen: tipoExamen),
+                          builder: (context) =>
+                              ExamenScreen(tipoExamen: tipoExamen),
                         ),
                       );
                     },
@@ -92,11 +117,13 @@ class ExamenDetalleScreen extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      await registrarEnHistorial(tipoExamen, 'Modo Prueba');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ExamenScreen(tipoExamen: tipoExamen),
+                          builder: (context) =>
+                              ExamenScreen(tipoExamen: tipoExamen),
                         ),
                       );
                     },
