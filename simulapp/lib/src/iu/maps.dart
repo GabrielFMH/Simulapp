@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:location/location.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({super.key});
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -15,7 +15,7 @@ class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
   final Set<Marker> _markers = {};
   final Set<Polyline> _polylines = {};
-  LatLng _initialPosition = const LatLng(-12.046374, -77.042793); // Lima, Perú
+  final LatLng _initialPosition = const LatLng(-12.046374, -77.042793); // Lima, Perú
   LatLng? _currentPosition;
 
   MapType _currentMapType = MapType.normal;
@@ -170,14 +170,12 @@ class _MapScreenState extends State<MapScreen> {
       _currentPosition = LatLng(locationData.latitude!, locationData.longitude!);
 
       // Verifica si el mapController está inicializado antes de usarlo
-      if (mapController != null) {
-        mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(target: _currentPosition!, zoom: 15),
-          ),
-        );
-      }
-
+      mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: _currentPosition!, zoom: 15),
+        ),
+      );
+    
       setState(() {
         _markers.add(
           Marker(
@@ -277,9 +275,9 @@ class _MapScreenState extends State<MapScreen> {
             bottom: 20,
             child: FloatingActionButton(
               onPressed: _getCurrentLocation,
-              child: const Icon(Icons.my_location),
               backgroundColor: Colors.red,
               tooltip: 'Ver mi ubicación',
+              child: const Icon(Icons.my_location),
             ),
           ),
         ],

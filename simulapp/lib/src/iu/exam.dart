@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Para Firebase Firestore
 import 'package:firebase_auth/firebase_auth.dart'; // Para obtener el usuario logueado
-import 'maps.dart';
-import 'prices.dart';
-import 'calendar.dart';
-import 'examlist.dart';
 import 'question.dart';
 
 class ExamenDetalleScreen extends StatelessWidget {
@@ -14,12 +10,12 @@ class ExamenDetalleScreen extends StatelessWidget {
   final String examenId;
 
   const ExamenDetalleScreen({
-    Key? key,
+    super.key,
     required this.nombre,
     required this.descripcion,
     required this.imagen,
     required this.examenId,
-  }) : super(key: key);
+  });
 
   Future<void> registrarEnHistorial(String tipoExamen, String modo) async {
     try {
@@ -106,7 +102,7 @@ class ExamenDetalleScreen extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      side: BorderSide(color: Colors.black),
+                      side: const BorderSide(color: Colors.black),
                     ),
                     child: const Text(
                       'Contrareloj',

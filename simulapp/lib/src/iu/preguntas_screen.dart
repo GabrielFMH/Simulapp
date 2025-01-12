@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore
 class PreguntasScreen extends StatefulWidget {
   final String examenId; // Recibir el ID del examen
 
-  const PreguntasScreen({Key? key, required this.examenId}) : super(key: key);
+  const PreguntasScreen({super.key, required this.examenId});
 
   @override
   _PreguntasScreenState createState() => _PreguntasScreenState();

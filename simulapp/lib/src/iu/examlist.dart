@@ -172,7 +172,7 @@ class _ExamenesScreenState extends State<ExamenesScreen> {
           children: [
             _buildExamenesView(), // Vista de exámenes
 
-            UserProfile(), // Placeholder para Inicio
+            const UserProfile(), // Placeholder para Inicio
             const MapScreen(), // Aquí se muestra la pantalla del mapa (ubicación)
             const PricesPage(), // Navegar a PricesPage
             const CalendarPage(), // Nueva vista para Calendario

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'register.dart';  // Importa la página de registro
-import 'examlist.dart';  // Importa la página de examlist
+import 'examlist.dart';  
+import '../../subir_preguntas.dart'; // Importa la página de examlist
+
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,6 +17,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool isLoading = false;
 
   Future<void> loginUser() async {
     try {
@@ -105,12 +109,41 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 child: const Text('Login', style: TextStyle(fontSize: 18)),
               ),
+
+  
+           ElevatedButton(
+                  onPressed: isLoading
+                      ? null // Desactiva el botón mientras se carga
+                      : () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          try {
+                            await addMultipleQuestions();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Preguntas subidas correctamente")),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Error al subir preguntas: $e")),
+                            );
+                          } finally {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        },
+                  child: isLoading
+                      ? const CircularProgressIndicator() // Muestra un indicador de carga
+                      : const Text('Subir Preguntas'),
+                ),
+
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   // Navegar a la página de registro
                   Navigator.push(context, 
-                    MaterialPageRoute(builder: (context) => RegisterPage()));
+                    MaterialPageRoute(builder: (context) => const RegisterPage()));
                 },
                 child: const Text(
                   'No account? Register here',
