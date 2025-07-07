@@ -65,10 +65,12 @@ class _CalendarPageContent extends StatelessWidget {
                                   ))
                               .toList(),
                           onDateTimeReset: (date) {
-                            viewModel.updateSelectedDay(date as DateTime);
+                            final selectedDate = DateTime(date.year, date.month, date.day);
+                            viewModel.updateSelectedDay(selectedDate);
                           },
                           onChangeDateTime: (date) {
-                            viewModel.updateSelectedDay(date as DateTime);
+                            final selectedDate = DateTime(date.year, date.month, date.day);
+                            viewModel.updateSelectedDay(selectedDate);
                           },
                         );
                       },

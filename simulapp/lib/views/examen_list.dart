@@ -5,9 +5,10 @@ import '../models/examen_model.dart'; // Importa el modelo (para AppColors y Exa
 import '../viewmodels/examen_list_viewmodel.dart'; // Importa el ViewModel
 import '../src/iu/maps.dart'; // Asegúrate de importar tu archivo maps.dart
 import '../src/iu/prices.dart';
-import '../src/iu/calendar.dart'; // Importa el archivo calendar.dart
+//import '../src/iu/calendar.dart'; // Importa el archivo calendar.dart
 import '../src/iu/exam.dart'; // Importa la pantalla de detalles
-import '../views/profile.dart';
+import 'calendar.dart';
+import 'profile.dart';
 //import '../src/iu/profile.dart'; // Importa la pantalla de perfil
 
 class MyApp extends StatelessWidget {
