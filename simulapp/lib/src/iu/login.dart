@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'register.dart';  // Importa la página de registro
-import 'examlist.dart';  
-import '../../subir_preguntas.dart'; // Importa la página de examlist
-
-
+import 'register.dart'; // Importa la página de registro
+import 'examlist.dart';
+//import '../../subir_preguntas.dart'; // Importa la página de examlist
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,7 +20,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> loginUser() async {
     try {
       // Iniciar sesión con Firebase Authentication
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
@@ -41,12 +40,14 @@ class _LoginPageState extends State<LoginPage> {
         // Redirigir a la página de lista de exámenes
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ExamenesScreen()),  // Cambia ExamList por ExamenesScreen
+          MaterialPageRoute(
+              builder: (context) =>
+                  const ExamenesScreen()), // Cambia ExamList por ExamenesScreen
         );
       } else {
         print("User not found in Firestore.");
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('User not found in Firestore')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('User not found in Firestore')));
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('SimulApp'),
-        backgroundColor: Colors.lightBlue,  // Color celeste para el AppBar
+        backgroundColor: Colors.lightBlue, // Color celeste para el AppBar
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -67,14 +68,15 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.lock_outline, size: 100, color: Colors.blue),  // Icono azul
+              const Icon(Icons.lock_outline,
+                  size: 100, color: Colors.blue), // Icono azul
               const SizedBox(height: 20),
               const Text(
                 'Welcome Back!',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,  // Texto azul
+                  color: Colors.blue, // Texto azul
                 ),
               ),
               const SizedBox(height: 20),
@@ -101,8 +103,10 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: loginUser,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,  // Color celeste para el botón
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  backgroundColor:
+                      Colors.lightBlue, // Color celeste para el botón
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -110,44 +114,48 @@ class _LoginPageState extends State<LoginPage> {
                 child: const Text('Login', style: TextStyle(fontSize: 18)),
               ),
 
-  
-           ElevatedButton(
-                  onPressed: isLoading
-                      ? null // Desactiva el botón mientras se carga
-                      : () async {
+              ElevatedButton(
+                onPressed: isLoading
+                    ? null // Desactiva el botón mientras se carga
+                    : () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        try {
+                          //await addMultipleQuestions();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text("Preguntas subidas correctamente")),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text("Error al subir preguntas: $e")),
+                          );
+                        } finally {
                           setState(() {
-                            isLoading = true;
+                            isLoading = false;
                           });
-                          try {
-                            await addMultipleQuestions();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Preguntas subidas correctamente")),
-                            );
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Error al subir preguntas: $e")),
-                            );
-                          } finally {
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }
-                        },
-                  child: isLoading
-                      ? const CircularProgressIndicator() // Muestra un indicador de carga
-                      : const Text('Subir Preguntas'),
-                ),
+                        }
+                      },
+                child: isLoading
+                    ? const CircularProgressIndicator() // Muestra un indicador de carga
+                    : const Text('Subir Preguntas'),
+              ),
 
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   // Navegar a la página de registro
-                  Navigator.push(context, 
-                    MaterialPageRoute(builder: (context) => const RegisterPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterPage()));
                 },
                 child: const Text(
                   'No account? Register here',
-                  style: TextStyle(color: Colors.blue),  // Texto del botón azul
+                  style: TextStyle(color: Colors.blue), // Texto del botón azul
                 ),
               ),
             ],
