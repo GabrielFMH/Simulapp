@@ -8,7 +8,8 @@ import 'map.dart';
 //import '../src/iu/prices.dart';
 import 'price.dart';
 //import '../src/iu/calendar.dart'; // Importa el archivo calendar.dart
-import '../src/iu/exam.dart'; // Importa la pantalla de detalles
+import 'examen.dart';
+//import '../src/iu/exam.dart'; // Importa la pantalla de detalles
 import 'calendar.dart';
 import 'profile.dart';
 //import '../src/iu/profile.dart'; // Importa la pantalla de perfil
@@ -191,8 +192,9 @@ class ExamenesList extends StatelessWidget {
                     nombre: examen.nombre, // Pasar el nombre del examen
                     descripcion:
                         examen.descripcion, // Pasar la descripción del examen
-                    imagen: examen.imagen,
-                    examenId: '', // Pasar la imagen del examen
+                    imagen: examen.imagen, // Pasar la imagen del examen
+                    examenId: examen.examenId,
+                    examen: examen,
                   ),
                 ),
               );

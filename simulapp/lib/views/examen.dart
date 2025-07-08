@@ -1,53 +1,37 @@
+// lib/views/exam_detalle_screen.dart
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Para Firebase Firestore
-import 'package:firebase_auth/firebase_auth.dart'; // Para obtener el usuario logueado
-import 'question.dart';
+import 'package:provider/provider.dart';
+import '../viewmodels/examen_viewmodel.dart'; // Adjust path
+import '../src/iu/question.dart';
+import '../models/examen_model.dart';
 
 class ExamenDetalleScreen extends StatelessWidget {
-  final String nombre;
-  final String descripcion;
-  final String imagen;
-  final String examenId;
+  final Examen examen;
 
   const ExamenDetalleScreen({
     super.key,
-    required this.nombre,
-    required this.descripcion,
-    required this.imagen,
-    required this.examenId,
+    required this.examen, required String nombre, required String descripcion, required String imagen, required String examenId,
   });
-
-  Future<void> registrarEnHistorial(String tipoExamen, String modo) async {
-    try {
-      final User? user =
-          FirebaseAuth.instance.currentUser; // Obtener usuario logueado
-      if (user == null) {
-        throw Exception('No user logged in');
-      }
-      final String userId = user.uid;
-
-      await FirebaseFirestore.instance.collection('historial').add({
-        'userId': userId,
-        'examenId': examenId,
-        'nombreExamen': nombre,
-        'fecha': DateTime.now(),
-        'modo': modo, // Contrareloj o Modo Prueba
-        'tipoExamen': tipoExamen,
-      });
-      print('Registro guardado en historial.');
-    } catch (e) {
-      print('Error al guardar en historial: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => ExamViewModel(examen),
+      child: const _ExamenDetalleScreenContent(),
+    );
+  }
+}
 
-    String tipoExamen = '';
+class _ExamenDetalleScreenContent extends StatelessWidget {
+  const _ExamenDetalleScreenContent();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = Provider.of<ExamViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(nombre),
+        title: Text(viewModel.examen.nombre),
         backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
@@ -56,7 +40,7 @@ class ExamenDetalleScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
-              imagen,
+              viewModel.examen.imagen,
               height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -69,7 +53,7 @@ class ExamenDetalleScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                descripcion,
+                viewModel.examen.descripcion,
                 style: const TextStyle(fontSize: 16, color: Colors.black87),
                 textAlign: TextAlign.center,
               ),
@@ -81,12 +65,11 @@ class ExamenDetalleScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      await registrarEnHistorial(tipoExamen, 'Contrareloj');
+                      await viewModel.registrarEnHistorial('Contrareloj');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              ExamenScreen(tipoExamen: tipoExamen),
+                          builder: (context) => ExamenScreen(tipoExamen: 'Contrareloj'),
                         ),
                       );
                     },
@@ -104,12 +87,11 @@ class ExamenDetalleScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      await registrarEnHistorial(tipoExamen, 'Modo Prueba');
+                      await viewModel.registrarEnHistorial('Modo Prueba');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              ExamenScreen(tipoExamen: tipoExamen),
+                          builder: (context) => ExamenScreen(tipoExamen: 'Modo Prueba'),
                         ),
                       );
                     },
