@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Para ChangeNotifierProvider y Consumer
 import '../models/examen_model.dart'; // Importa el modelo (para AppColors y Examen)
 import '../viewmodels/examen_list_viewmodel.dart'; // Importa el ViewModel
-import '../src/iu/maps.dart'; // Asegúrate de importar tu archivo maps.dart
+//import '../src/iu/maps.dart'; // Asegúrate de importar tu archivo maps.dart
+import 'map.dart';
 import '../src/iu/prices.dart';
 //import '../src/iu/calendar.dart'; // Importa el archivo calendar.dart
 import '../src/iu/exam.dart'; // Importa la pantalla de detalles

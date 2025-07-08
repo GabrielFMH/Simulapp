@@ -36,7 +36,7 @@ class ProfileViewModel extends ChangeNotifier {
       final historialSnapshot = await historialRef.get();
       if (historialSnapshot.docs.isNotEmpty) {
         examHistory.value = historialSnapshot.docs
-            .map((doc) => ExamHistory.fromMap(doc.data() as Map<String, dynamic>))
+            .map((doc) => ExamHistory.fromMap(doc.data()))
             .toList();
       }
     } catch (e) {

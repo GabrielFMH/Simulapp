@@ -12,7 +12,6 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   late Map<DateTime, List<Examen>> _events;
-  DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
   @override
@@ -89,13 +88,11 @@ class _CalendarPageState extends State<CalendarPage> {
               onDateTimeReset: (date) {
                 setState(() {
                   _selectedDay = DateTime(date.year, date.month, date.day);
-                  _focusedDay = DateTime(date.year, date.month, date.day);
                 });
               },
               onChangeDateTime: (date) {
                 setState(() {
                   _selectedDay = DateTime(date.year, date.month, date.day);
-                  _focusedDay = DateTime(date.year, date.month, date.day);
                 });
               },
             ),
