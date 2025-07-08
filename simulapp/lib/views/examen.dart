@@ -2,15 +2,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/examen_viewmodel.dart'; // Adjust path
-import '../src/iu/question.dart';
+//import '../src/iu/question.dart';
+import 'pregunta.dart';
 import '../models/examen_model.dart';
+
+
 
 class ExamenDetalleScreen extends StatelessWidget {
   final Examen examen;
 
   const ExamenDetalleScreen({
     super.key,
-    required this.examen, required String nombre, required String descripcion, required String imagen, required String examenId,
+    required this.examen,
   });
 
   @override
@@ -69,7 +72,10 @@ class _ExamenDetalleScreenContent extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ExamenScreen(tipoExamen: 'Contrareloj'),
+                          builder: (context) => ExamenScreen(
+                            tipoExamen: viewModel.examen.examenId, // Usar examenId
+                            modo: 'Contrareloj', // Modo como parámetro adicional
+                          ),
                         ),
                       );
                     },
@@ -91,7 +97,10 @@ class _ExamenDetalleScreenContent extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ExamenScreen(tipoExamen: 'Modo Prueba'),
+                          builder: (context) => ExamenScreen(
+                            tipoExamen: viewModel.examen.examenId, // Usar examenId
+                            modo: 'Modo Prueba', // Modo como parámetro adicional
+                          ),
                         ),
                       );
                     },

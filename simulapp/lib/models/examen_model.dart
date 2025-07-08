@@ -13,7 +13,8 @@ class Examen {
   final String nombre;
   final String descripcion;
   final String imagen;
-  final DateTime fecha; // Cambiado a DateTime para mejor integración con el calendario
+  final DateTime
+      fecha; // Cambiado a DateTime para mejor integración con el calendario
   final String examenId;
 
   Examen({
@@ -31,13 +32,13 @@ final List<Examen> allCambridgeExamenes = [
     nombre: 'C1 Advanced (CAE)',
     descripcion: 'Examen avanzado de inglés.',
     imagen: 'assets/images/CAE.jpg',
-    fecha: DateTime(2025, 7, 15), examenId: '', // 15 de julio de 2025
+    fecha: DateTime(2025, 7, 15), examenId: 'CAE', // 15 de julio de 2025
   ),
   Examen(
     nombre: 'C2 Proficiency (CPE)',
     descripcion: 'Examen de máximo nivel en inglés.',
     imagen: 'assets/images/CPE.jpg',
-    fecha: DateTime(2025, 7, 20), examenId: '', // 20 de julio de 2025
+    fecha: DateTime(2025, 7, 20), examenId: 'CPE', // 20 de julio de 2025
   ),
 ];
 
@@ -46,13 +47,13 @@ final List<Examen> allMichiganExamenes = [
     nombre: 'ECCE',
     descripcion: 'Examen de competencia en inglés.',
     imagen: 'assets/images/ECCE.jpg',
-    fecha: DateTime(2025, 7, 10), examenId: '', // 10 de julio de 2025
+    fecha: DateTime(2025, 7, 10), examenId: 'ECCE', // 10 de julio de 2025
   ),
   Examen(
     nombre: 'ECPE',
     descripcion: 'Examen de dominio en inglés.',
     imagen: 'assets/images/ECPE.jpg',
-    fecha: DateTime(2025, 7, 25), examenId: '', // 25 de julio de 2025
+    fecha: DateTime(2025, 7, 25), examenId: 'ECPE', // 25 de julio de 2025
   ),
 ];
 
@@ -61,12 +62,12 @@ final List<Examen> allToeflExamenes = [
     nombre: 'TOEFL iBT',
     descripcion: 'Examen por internet de inglés.',
     imagen: 'assets/images/IBT.jpg',
-    fecha: DateTime(2025, 7, 12), examenId: '', // 12 de julio de 2025
+    fecha: DateTime(2025, 7, 12), examenId: 'TOELF', // 12 de julio de 2025
   ),
   Examen(
     nombre: 'TOEFL ITP',
     descripcion: 'Examen en papel de inglés.',
     imagen: 'assets/images/ITP.jpg',
-    fecha: DateTime(2025, 7, 18), examenId: '', // 18 de julio de 2025
+    fecha: DateTime(2025, 7, 18), examenId: 'TOELF', // 18 de julio de 2025
   ),
 ];

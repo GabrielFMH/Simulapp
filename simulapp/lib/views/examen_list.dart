@@ -14,25 +14,6 @@ import 'calendar.dart';
 import 'profile.dart';
 //import '../src/iu/profile.dart'; // Importa la pantalla de perfil
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ChangeNotifierProvider(
-        create: (_) =>
-            ExamenListViewModel(), // Proporciona el ViewModel a la vista
-        child: const ExamenesScreen(),
-      ),
-      theme: ThemeData(
-        primaryColor: AppColors.color1, // Color primario
-        scaffoldBackgroundColor: AppColors.white, // Color de fondo
-      ),
-    );
-  }
-}
-
 class ExamenesScreen extends StatelessWidget {
   const ExamenesScreen({super.key});
 
@@ -188,14 +169,7 @@ class ExamenesList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ExamenDetalleScreen(
-                    nombre: examen.nombre, // Pasar el nombre del examen
-                    descripcion:
-                        examen.descripcion, // Pasar la descripción del examen
-                    imagen: examen.imagen, // Pasar la imagen del examen
-                    examenId: examen.examenId,
-                    examen: examen,
-                  ),
+                  builder: (context) => ExamenDetalleScreen(examen: examen),
                 ),
               );
             },
