@@ -12,9 +12,10 @@ class RegisterPage extends StatelessWidget {
       child: Consumer<RegisterViewModel>(
         builder: (context, viewModel, _) {
           return Scaffold(
+            backgroundColor: Colors.lightBlue, // Fondo celeste
             appBar: AppBar(
-              title: const Text('Register'),
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Colors.lightBlue, // Color celeste para el AppBar
+              elevation: 0, // Elimina la sombra para un diseño más limpio
             ),
             body: Center(
               child: SingleChildScrollView(
@@ -22,43 +23,88 @@ class RegisterPage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.person_add_alt_1, size: 100, color: Colors.deepPurple),
                     const SizedBox(height: 20),
                     const Text(
-                      'Create Account',
+                      'SimulApp',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
+                        color: Colors.white, // Letras blancas para contraste
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Practice your Michigan, Cambridge and TOEFL exams',
+                      textAlign: TextAlign.center, // Centrar el texto
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // Letras blancas para contraste
                       ),
                     ),
                     const SizedBox(height: 20),
                     TextField(
                       controller: viewModel.usernameController,
+                      style: const TextStyle(
+                          color: Colors.black), // Texto negro para contraste
                       decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white, // Fondo blanco
                         labelText: 'Username',
+                        labelStyle: TextStyle(
+                            color: Colors.black54), // Etiqueta gris oscuro
                         border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.person),
+                        prefixIcon: Icon(Icons.person, color: Colors.black54),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
                     TextField(
                       controller: viewModel.emailController,
                       keyboardType: TextInputType.emailAddress,
+                      style: const TextStyle(
+                          color: Colors.black), // Texto negro para contraste
                       decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white, // Fondo blanco
                         labelText: 'Email',
+                        labelStyle: TextStyle(
+                            color: Colors.black54), // Etiqueta gris oscuro
                         border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.email),
+                        prefixIcon: Icon(Icons.email, color: Colors.black54),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
                     TextField(
                       controller: viewModel.passwordController,
                       obscureText: true,
+                      style: const TextStyle(
+                          color: Colors.black), // Texto negro para contraste
                       decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white, // Fondo blanco
                         labelText: 'Password',
+                        labelStyle: TextStyle(
+                            color: Colors.black54), // Etiqueta gris oscuro
                         border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.lock),
+                        prefixIcon: Icon(Icons.lock, color: Colors.black54),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -69,7 +115,9 @@ class RegisterPage extends StatelessWidget {
                               final error = await viewModel.registerUser();
                               if (error == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('User registered successfully')),
+                                  const SnackBar(
+                                      content:
+                                          Text('User registered successfully')),
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -78,15 +126,23 @@ class RegisterPage extends StatelessWidget {
                               }
                             },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                        backgroundColor: Colors.white, // Botón blanco
+                        foregroundColor:
+                            Colors.lightBlue, // Texto/iconos celeste
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       child: viewModel.isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text('Register', style: TextStyle(fontSize: 18)),
+                          ? const CircularProgressIndicator(
+                              color: Colors.lightBlue) // Indicador celeste
+                          : const Text(
+                              'Register',
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.lightBlue),
+                            ),
                     ),
                     const SizedBox(height: 20),
                   ],

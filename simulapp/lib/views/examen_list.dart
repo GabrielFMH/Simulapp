@@ -24,10 +24,11 @@ class ExamenesScreen extends StatelessWidget {
         return DefaultTabController(
           length: 3, // Número de pestañas (Cambridge, Michigan, Toefl)
           child: Scaffold(
+            backgroundColor:
+                const Color.fromARGB(255, 166, 222, 248), // Fondo celeste
             appBar: AppBar(
-              title: const Text('Exámenes Internacionales'),
-              centerTitle: true,
-              backgroundColor: AppColors.color3,
+              backgroundColor: Colors.lightBlue, // Color celeste para el AppBar
+              elevation: 0, // Elimina la sombra para un diseño más limpio
               bottom: viewModel.selectedIndex == 0
                   ? const TabBar(
                       tabs: [
@@ -35,7 +36,11 @@ class ExamenesScreen extends StatelessWidget {
                         Tab(text: 'Michigan'),
                         Tab(text: 'Toefl'),
                       ],
-                      indicatorColor: AppColors.color2,
+                      labelColor: Colors
+                          .white, // Texto blanco para pestañas seleccionadas
+                      unselectedLabelColor: Colors
+                          .white70, // Texto blanco suave para no seleccionadas
+                      indicatorColor: Colors.white, // Indicador blanco
                     )
                   : null, // Solo mostrar TabBar en la pantalla de exámenes
             ),
@@ -43,39 +48,41 @@ class ExamenesScreen extends StatelessWidget {
               index: viewModel.selectedIndex,
               children: [
                 _buildExamenesView(context, viewModel), // Vista de exámenes
-                const UserProfile(), // Placeholder para Inicio
-                const MapScreen(), // Aquí se muestra la pantalla del mapa (ubicación)
+                const UserProfile(), // Placeholder para Perfil
+                const MapScreen(), // Pantalla del mapa (ubicación)
                 const PricesPage(), // Navegar a PricesPage
-                const CalendarPage(), // Nueva vista para Calendario
+                const CalendarPage(), // Vista para Calendario
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: AppColors.color3,
+              backgroundColor: Colors.lightBlue, // Fondo celeste
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.grid_view, color: AppColors.color2),
-                  label: 'Menú',
+                  icon: Icon(Icons.grid_view, color: Colors.lightBlue),
+                  label: 'Exams',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.home, color: AppColors.color2),
-                  label: 'Inicio',
+                  icon: Icon(Icons.person, color: Colors.lightBlue),
+                  label: 'Profile',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.location_pin, color: AppColors.color2),
-                  label: 'Ubicación',
+                  icon: Icon(Icons.location_pin, color: Colors.lightBlue),
+                  label: 'Ubication',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.attach_money, color: AppColors.color2),
-                  label: 'Precios',
+                  icon: Icon(Icons.attach_money, color: Colors.lightBlue),
+                  label: 'Prices',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_today, color: AppColors.color2),
-                  label: 'Calendario',
+                  icon: Icon(Icons.calendar_today, color: Colors.lightBlue),
+                  label: 'Calendary',
                 ),
               ],
               currentIndex: viewModel.selectedIndex,
-              selectedItemColor: AppColors.color2,
-              unselectedItemColor: AppColors.color1,
+              selectedItemColor:
+                  Colors.lightBlue, // Ítems seleccionados en celeste
+              unselectedItemColor: Colors
+                  .lightBlueAccent, // Ítems no seleccionados en celeste claro
               showUnselectedLabels: true,
               showSelectedLabels: true,
               onTap: viewModel
@@ -97,12 +104,20 @@ class ExamenesScreen extends StatelessWidget {
           child: TextField(
             controller:
                 viewModel.searchController, // Usa el controlador del ViewModel
-            decoration: InputDecoration(
+            style: const TextStyle(
+                color: Colors.black), // Texto negro para contraste
+            decoration: const InputDecoration(
+              filled: true,
+              fillColor: Colors.white, // Fondo blanco
               hintText: 'Buscar',
-              prefixIcon: const Icon(Icons.search, color: AppColors.color2),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: AppColors.color2),
+              hintStyle: TextStyle(color: Colors.black54), // Pista gris oscuro
+              prefixIcon: Icon(Icons.search, color: Colors.black54),
+              border: OutlineInputBorder(),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black54),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
               ),
             ),
           ),
@@ -121,7 +136,6 @@ class ExamenesScreen extends StatelessWidget {
   }
 }
 
-// Widget que muestra la lista de exámenes (se mantiene casi igual, pero ahora recibe la lista del ViewModel)
 class ExamenesList extends StatelessWidget {
   final List<Examen> examenes;
 
@@ -133,39 +147,39 @@ class ExamenesList extends StatelessWidget {
       return const Center(
         child: Text(
           'No se encontraron exámenes',
-          style: TextStyle(color: AppColors.color2, fontSize: 18),
+          style: TextStyle(color: Colors.white, fontSize: 18), // Texto blanco
         ),
       );
     }
 
     return ListView.builder(
-      itemCount: examenes.length, // Número de exámenes en la lista
+      itemCount: examenes.length,
       itemBuilder: (context, index) {
         final examen = examenes[index];
         return Card(
           margin: const EdgeInsets.all(8),
-          color: AppColors.color1, // Color de fondo de la tarjeta
+          color: Colors.white, // Fondo blanco para la tarjeta
           child: ListTile(
             leading: SizedBox(
               width: 50,
               height: 50,
               child: Image.asset(
-                examen.imagen, // Ruta de la imagen del examen
+                examen.imagen,
                 fit: BoxFit.cover,
               ),
             ),
             title: Text(
               examen.nombre,
-              style: const TextStyle(color: AppColors.white),
+              style: const TextStyle(color: Colors.lightBlue), // Texto celeste
             ),
             subtitle: Text(
               examen.descripcion,
-              style: const TextStyle(color: AppColors.white),
+              style: const TextStyle(
+                  color: Colors.black54), // Subtítulo gris oscuro
             ),
             trailing: const Icon(Icons.arrow_forward_ios,
-                color: AppColors.white), // Color del icono
+                color: Colors.lightBlue), // Icono celeste
             onTap: () {
-              // Navegar a la pantalla de detalles usando ExamenDetalleScreen de exam.dart
               Navigator.push(
                 context,
                 MaterialPageRoute(

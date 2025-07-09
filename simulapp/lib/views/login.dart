@@ -20,45 +20,74 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SimulApp'),
-        backgroundColor: Colors.lightBlue, // Color celeste para el AppBar
-      ),
+      backgroundColor: const Color.fromARGB(255, 42, 186, 253), // Fondo celeste
+
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.lock_outline,
-                  size: 100, color: Colors.blue), // Icono azul
               const SizedBox(height: 20),
               const Text(
-                'Welcome Back!',
+                'SimulApp',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue, // Texto azul
+                  color: Colors.white, // Letras blancas para contraste
+                ),
+              ),
+              const Text(
+                'Practice your Michigan,Cambridge and Toelf exams',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white, // Letras blancas para contraste
                 ),
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
+                style: const TextStyle(
+                    color: Colors.black), // Texto negro para contraste
                 decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white, // Fondo blanco
                   labelText: 'Email',
+                  labelStyle:
+                      TextStyle(color: Colors.black54), // Etiqueta gris oscuro
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: Icon(Icons.email, color: Colors.black54),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
+                style: const TextStyle(
+                    color: Colors.black), // Texto negro para contraste
                 decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white, // Fondo blanco
                   labelText: 'Password',
+                  labelStyle:
+                      TextStyle(color: Colors.black54), // Etiqueta gris oscuro
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
+                  prefixIcon: Icon(Icons.lock, color: Colors.black54),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
@@ -77,7 +106,6 @@ class _LoginViewState extends State<LoginView> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Login exitoso')),
                               );
-                              // Navigate to ExamenesScreen after successful login
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -95,8 +123,8 @@ class _LoginViewState extends State<LoginView> {
                             }
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Colors.lightBlue, // Color celeste para el botón
+                      backgroundColor: Colors.white, // Botón blanco
+                      foregroundColor: Colors.lightBlue, // Texto/iconos celeste
                       padding: const EdgeInsets.symmetric(
                           horizontal: 50, vertical: 15),
                       shape: RoundedRectangleBorder(
@@ -105,10 +133,12 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     child: isLoading
                         ? const CircularProgressIndicator(
-                            color: Colors.white) // Indicador de carga blanco
-                        : const Text('Login',
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.white)),
+                            color: Colors.lightBlue) // Indicador celeste
+                        : const Text(
+                            'Login',
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.lightBlue),
+                          ),
                   );
                 },
               ),
@@ -123,7 +153,7 @@ class _LoginViewState extends State<LoginView> {
                 },
                 child: const Text(
                   'No account? Register here',
-                  style: TextStyle(color: Colors.blue), // Texto del botón azul
+                  style: TextStyle(color: Colors.white), // Texto blanco
                 ),
               ),
             ],
