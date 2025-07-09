@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 // Asegúrate de que esta importación esté aquí
-import '../../firebase_options.dart'; // Archivo generado por Firebase CLI
+import '../firebase_options.dart'; // Archivo generado por Firebase CLI
 
 Future<void> initializeFirebase() async {
   try {

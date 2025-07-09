@@ -1,7 +1,7 @@
 // lib/views/prices_page.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher/url_launcher.dart';
 import '../viewmodels/price_viewmodel.dart';
 
 class PricesPage extends StatelessWidget {
@@ -51,14 +51,16 @@ class _PricesPageContent extends StatelessWidget {
           itemCount: viewModel.examPrices.length,
           itemBuilder: (context, index) {
             final exam = viewModel.examPrices[index];
-            return _buildExamCard(context, exam.name, exam.imageUrl, exam.price, exam.url);
+            return _buildExamCard(
+                context, exam.name, exam.imageUrl, exam.price, exam.url);
           },
         ),
       ),
     );
   }
 
-  Widget _buildExamCard(BuildContext context, String examName, String imageUrl, String price, String url) {
+  Widget _buildExamCard(BuildContext context, String examName, String imageUrl,
+      String price, String url) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.only(bottom: 16.0),
@@ -102,7 +104,8 @@ class _PricesPageContent extends StatelessWidget {
               icon: const Icon(Icons.open_in_new, color: Colors.orange),
               onPressed: () async {
                 try {
-                  await Provider.of<PriceViewModel>(context, listen: false).launchURL(url);
+                  await Provider.of<PriceViewModel>(context, listen: false)
+                      .launchURL(url);
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Error launching URL: $e')),
