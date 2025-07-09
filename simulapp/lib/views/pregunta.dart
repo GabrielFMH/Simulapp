@@ -1,4 +1,3 @@
-// lib/views/examen_screen.dart
 import 'package:flutter/material.dart';
 import '../viewmodels/pregunta_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -68,23 +67,33 @@ class _ExamenScreenContentState extends State<_ExamenScreenContent> {
 
     if (viewModel.isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Examen de Inglés')),
+        appBar: AppBar(
+            title: const Text('Examen de Inglés',
+                style: TextStyle(color: Colors.black))),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (viewModel.errorMessage != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Examen de Inglés')),
-        body: Center(child: Text(viewModel.errorMessage!)),
+        appBar: AppBar(
+            title: const Text('Examen de Inglés',
+                style: TextStyle(color: Colors.black))),
+        body: Center(
+            child: Text(viewModel.errorMessage!,
+                style: TextStyle(color: Colors.black))),
       );
     }
 
     final currentQuestion = viewModel.currentQuestion;
     if (currentQuestion == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Examen de Inglés')),
-        body: const Center(child: Text('No hay preguntas disponibles')),
+        appBar: AppBar(
+            title: const Text('Examen de Inglés',
+                style: TextStyle(color: Colors.black))),
+        body: const Center(
+            child: Text('No hay preguntas disponibles',
+                style: TextStyle(color: Colors.black))),
       );
     }
 
@@ -117,8 +126,26 @@ class _ExamenScreenContentState extends State<_ExamenScreenContent> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            'Pregunta ${viewModel.currentQuestionIndex + 1} de ${viewModel.totalPreguntas}'),
+        title: Row(
+          children: [
+            Text(
+              'Pregunta ${viewModel.currentQuestionIndex + 1} de ${viewModel.totalPreguntas}',
+              style: const TextStyle(color: Colors.black),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: LinearProgressIndicator(
+                value: (viewModel.currentQuestionIndex + 1) /
+                    viewModel.totalPreguntas,
+                backgroundColor: Colors.grey[300],
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                minHeight: 5,
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 40, 175, 238),
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -127,19 +154,36 @@ class _ExamenScreenContentState extends State<_ExamenScreenContent> {
           children: [
             Text(
               currentQuestion.enunciado,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             const SizedBox(height: 20),
             Column(
               children: currentQuestion.opciones.map((opcion) {
-                return RadioListTile<String>(
-                  title: Text(opcion),
-                  value: opcion,
-                  groupValue: viewModel.respuestaSeleccionada,
-                  onChanged: (value) {
-                    print('Opción seleccionada: $value');
-                    viewModel.seleccionarRespuesta(value);
-                  },
+                final isSelected = viewModel.respuestaSeleccionada == opcion;
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 4.0),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? const Color.fromARGB(255, 42, 181, 245)
+                        : Colors.white,
+                    border: Border.all(color: Colors.lightBlue),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: RadioListTile<String>(
+                    title: Text(opcion,
+                        style: const TextStyle(color: Colors.black)),
+                    value: opcion,
+                    groupValue: viewModel.respuestaSeleccionada,
+                    activeColor: Colors.white,
+                    selectedTileColor: Colors.lightBlue,
+                    onChanged: (value) {
+                      print('Opción seleccionada: $value');
+                      viewModel.seleccionarRespuesta(value);
+                    },
+                  ),
                 );
               }).toList(),
             ),
@@ -154,10 +198,16 @@ class _ExamenScreenContentState extends State<_ExamenScreenContent> {
                   print('No se seleccionó ninguna respuesta');
                 }
               },
-              child: const Text('Enviar respuesta'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.lightBlue,
+              ),
+              child: const Text('Enviar respuesta',
+                  style: TextStyle(color: Colors.lightBlue)),
             ),
             const SizedBox(height: 20),
-            Text('Puntaje: ${viewModel.puntaje}'),
+            Text('Puntaje: ${viewModel.puntaje}',
+                style: const TextStyle(color: Colors.black)),
           ],
         ),
       ),

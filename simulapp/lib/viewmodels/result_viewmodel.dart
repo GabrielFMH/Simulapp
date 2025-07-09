@@ -10,7 +10,7 @@ class ResultViewModel extends ChangeNotifier {
   ResultViewModel({
     required List<Map<String, dynamic>> preguntas,
     required List<String?> respuestasSeleccionadas,
-    required int puntaje,
+    required double puntaje,
     required bool aprobado,
   }) {
     _initializeResult(preguntas, respuestasSeleccionadas, puntaje, aprobado);
@@ -19,7 +19,7 @@ class ResultViewModel extends ChangeNotifier {
   Result get result => _result;
   bool get isLoading => _isLoading;
 
-  void _initializeResult(List<Map<String, dynamic>> preguntas, List<String?> respuestasSeleccionadas, int puntaje, bool aprobado) {
+  void _initializeResult(List<Map<String, dynamic>> preguntas, List<String?> respuestasSeleccionadas, double puntaje, bool aprobado) {
     _isLoading = true;
     notifyListeners();
 

@@ -4,7 +4,7 @@ import 'pregunta_model.dart';
 class Result {
   final List<Question> preguntas;
   final List<String?> respuestasSeleccionadas;
-  final int puntaje;
+  final double puntaje;
   final bool aprobado;
 
   Result({

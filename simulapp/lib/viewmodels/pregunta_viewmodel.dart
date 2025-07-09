@@ -1,4 +1,3 @@
-// lib/viewmodels/question_viewmodel.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/pregunta_model.dart';
@@ -7,9 +6,9 @@ class QuestionViewModel extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String tipoExamen;
   int _currentQuestionIndex = 0;
-  int _puntaje = 0;
+  double _puntaje = 0.0; // Changed to double to handle decimals
   int _totalPreguntas = 0;
-  double _puntosPorPregunta = 0;
+  double _puntosPorPregunta = 0.0; // Changed to double
   bool _isLoading = true;
   String? _errorMessage;
   List<Question> _preguntas = [];
@@ -22,7 +21,7 @@ class QuestionViewModel extends ChangeNotifier {
   }
 
   int get currentQuestionIndex => _currentQuestionIndex;
-  int get puntaje => _puntaje;
+  double get puntaje => _puntaje; // Changed to double
   int get totalPreguntas => _totalPreguntas;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -71,10 +70,15 @@ class QuestionViewModel extends ChangeNotifier {
     print('Evaluando respuesta. Índice actual: $_currentQuestionIndex, Total: $_totalPreguntas, Respuesta seleccionada: $_respuestaSeleccionada');
     try {
       if (_respuestaSeleccionada != null && currentQuestion != null) {
-        if (_respuestaSeleccionada == currentQuestion!.respuesta) {
-          _puntaje += _puntosPorPregunta.toInt();
+        // Normalizar las cadenas para comparación (quitar espacios y convertir a minúsculas)
+        final selected = _respuestaSeleccionada!.trim().toLowerCase();
+        final correct = currentQuestion!.respuesta.trim().toLowerCase();
+        print('Comparando: Seleccionada="$selected", Correcta="$correct"');
+        if (selected == correct) {
+          _puntaje += _puntosPorPregunta; // Add full decimal value
+          print('Respuesta correcta, puntaje actualizado a $_puntaje');
         } else {
-          _puntaje -= 1;
+          print('Respuesta incorrecta, no se resta puntaje');
         }
         _respuestasSeleccionadas.add(_respuestaSeleccionada);
         _siguientePregunta();

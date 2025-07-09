@@ -1,4 +1,3 @@
-// lib/views/resumen_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/result_viewmodel.dart';
@@ -6,7 +5,7 @@ import '../viewmodels/result_viewmodel.dart';
 class ResumenScreen extends StatelessWidget {
   final List<Map<String, dynamic>> preguntas;
   final List<String?> respuestasSeleccionadas;
-  final int puntaje;
+  final double puntaje;
   final bool aprobado;
 
   const ResumenScreen({
@@ -40,112 +39,121 @@ class _ResumenScreenContent extends StatelessWidget {
 
     if (viewModel.isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Resumen del Examen')),
+        appBar: AppBar(
+            title: const Text('Resumen del Examen',
+                style: TextStyle(color: Colors.black))),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     final result = viewModel.result;
+    final totalQuestions = result.preguntas.length;
+    final correctAnswers =
+        result.puntaje; // Assuming puntaje is the number of correct answers
+    final percentageCorrect =
+        totalQuestions > 0 ? (correctAnswers / totalQuestions).toDouble() : 0.0;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Resumen del Examen'),
+        title: const Text('Resumen del Examen',
+            style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.lightBlue,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Encabezado del resultado
-            Container(
-              padding: const EdgeInsets.all(12.0),
-              decoration: BoxDecoration(
-                color: result.aprobado ? Colors.green.shade50 : Colors.red.shade50,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: result.aprobado ? Colors.green : Colors.red,
-                  width: 2,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            const Text(
+              'Porcentaje de aciertos:',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            const SizedBox(height: 10),
+            // Donut chart for percentage of correct answers
+            SizedBox(
+              height: 150,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Text(
-                    'Resultado: ${result.aprobado ? "Aprobado" : "Desaprobado"}',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: result.aprobado ? Colors.green : Colors.red,
+                  SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: CircularProgressIndicator(
+                      value: percentageCorrect.clamp(
+                          0.0, 1.0), // Ensure value is between 0.0 and 1.0
+                      backgroundColor: Colors.red,
+                      color:
+                          percentageCorrect <= 0.5 ? Colors.green : Colors.red,
+                      strokeWidth: 10,
                     ),
                   ),
-                  const SizedBox(height: 10),
                   Text(
-                    'Puntaje: ${result.puntaje}/20',
-                    style: const TextStyle(fontSize: 18),
+                    '${(percentageCorrect * 100).toStringAsFixed(0)}%',
+                    style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
                   ),
                 ],
               ),
             ),
-            
             const SizedBox(height: 20),
-
+            const Text(
+              'Respuestas Incorrectas',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
                 itemCount: result.preguntas.length,
                 itemBuilder: (context, index) {
                   final pregunta = result.preguntas[index];
                   final respuestaCorrecta = pregunta.respuesta;
-                  final respuestaUsuario = result.respuestasSeleccionadas[index];
+                  final respuestaUsuario =
+                      result.respuestasSeleccionadas[index];
 
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      side: BorderSide(color: Colors.grey.shade300, width: 1),
-                    ),
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Pregunta ${index + 1}:',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            pregunta.enunciado,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Respuesta seleccionada: ${respuestaUsuario ?? "No respondida"}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            'Respuesta correcta: $respuestaCorrecta',
-                            style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
-                          ),
-                          const SizedBox(height: 8),
-                          if (respuestaUsuario == respuestaCorrecta)
-                            const Text(
-                              'Respuesta Correcta',
-                              style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                            )
-                          else
-                            const Text(
-                              'Respuesta Incorrecta',
-                              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                            ),
-                        ],
+                  if (respuestaUsuario != respuestaCorrecta &&
+                      respuestaUsuario != null) {
+                    return Card(
+                      color: Colors.white,
+                      margin: const EdgeInsets.symmetric(vertical: 4.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: const BorderSide(color: Colors.lightBlue),
                       ),
-                    ),
-                  );
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Pregunta ${index + 1}: ${pregunta.enunciado}',
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.black),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Tu respuesta: $respuestaUsuario',
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.black),
+                            ),
+                            Text(
+                              'Correcta: $respuestaCorrecta',
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink(); // No mostrar si es correcta
                 },
               ),
             ),
