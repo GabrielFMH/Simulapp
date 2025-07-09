@@ -1,0 +1,2 @@
+C:/Users/GaboDesktop/Documents/GitHub/Simulapp/simulapp/android/app/.cxx/RelWithDebInfo/4x452pc5/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/GaboDesktop/Documents/GitHub/Simulapp/simulapp/android/app/.cxx/RelWithDebInfo/4x452pc5/x86_64/CMakeFiles/rebuild_cache.dir
