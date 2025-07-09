@@ -1,17 +1,14 @@
 // lib/views/examen_screen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/viewmodels/pregunta_viewmodel.dart';
+import '../viewmodels/pregunta_viewmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import '../src/iu/results.dart';
-import '../../firebase_options.dart';
-import '../models/pregunta_model.dart';
+import 'results.dart';
 
 class ExamenScreen extends StatelessWidget {
   final String tipoExamen;
+  final String modo;
 
-  const ExamenScreen({super.key, required this.tipoExamen, required String modo});
+  const ExamenScreen({super.key, required this.tipoExamen, required this.modo});
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +19,53 @@ class ExamenScreen extends StatelessWidget {
   }
 }
 
-class _ExamenScreenContent extends StatelessWidget {
+class _ExamenScreenContent extends StatefulWidget {
   const _ExamenScreenContent();
+
+  @override
+  _ExamenScreenContentState createState() => _ExamenScreenContentState();
+}
+
+class _ExamenScreenContentState extends State<_ExamenScreenContent> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final viewModel = Provider.of<QuestionViewModel>(context, listen: false);
+    if (viewModel.examenFinalizado) {
+      print('Detectado examen finalizado en didChangeDependencies');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final preguntas = viewModel.preguntas
+            .map((q) => {
+                  'enunciado': q.enunciado,
+                  'opciones': q.opciones,
+                  'respuesta': q.respuesta,
+                })
+            .toList();
+        final respuestasSeleccionadas = viewModel.respuestasSeleccionadas;
+        final puntaje = viewModel.puntaje;
+        final aprobado = puntaje >= 0.55 * 20;
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResumenScreen(
+              preguntas: preguntas,
+              respuestasSeleccionadas: respuestasSeleccionadas,
+              puntaje: puntaje,
+              aprobado: aprobado,
+            ),
+          ),
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<QuestionViewModel>(context);
+    print(
+        'Building screen. Current index: ${viewModel.currentQuestionIndex}, Total: ${viewModel.totalPreguntas}, Finalizado: ${viewModel.examenFinalizado}');
 
-    // Estado de carga
     if (viewModel.isLoading) {
       return Scaffold(
         appBar: AppBar(title: const Text('Examen de Inglés')),
@@ -37,7 +73,6 @@ class _ExamenScreenContent extends StatelessWidget {
       );
     }
 
-    // Estado de error
     if (viewModel.errorMessage != null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Examen de Inglés')),
@@ -45,7 +80,6 @@ class _ExamenScreenContent extends StatelessWidget {
       );
     }
 
-    // Verificar si hay preguntas disponibles
     final currentQuestion = viewModel.currentQuestion;
     if (currentQuestion == null) {
       return Scaffold(
@@ -54,7 +88,33 @@ class _ExamenScreenContent extends StatelessWidget {
       );
     }
 
-    // Mostrar la pregunta actual
+    if (viewModel.examenFinalizado && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        print('Forzando navegación a ResumenScreen desde build');
+        final preguntas = viewModel.preguntas
+            .map((q) => {
+                  'enunciado': q.enunciado,
+                  'opciones': q.opciones,
+                  'respuesta': q.respuesta,
+                })
+            .toList();
+        final respuestasSeleccionadas = viewModel.respuestasSeleccionadas;
+        final puntaje = viewModel.puntaje;
+        final aprobado = puntaje >= 0.55 * 20;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResumenScreen(
+              preguntas: preguntas,
+              respuestasSeleccionadas: respuestasSeleccionadas,
+              puntaje: puntaje,
+              aprobado: aprobado,
+            ),
+          ),
+        );
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -76,15 +136,24 @@ class _ExamenScreenContent extends StatelessWidget {
                   title: Text(opcion),
                   value: opcion,
                   groupValue: viewModel.respuestaSeleccionada,
-                  onChanged: (value) => viewModel.seleccionarRespuesta(value),
+                  onChanged: (value) {
+                    print('Opción seleccionada: $value');
+                    viewModel.seleccionarRespuesta(value);
+                  },
                 );
               }).toList(),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: viewModel.respuestaSeleccionada != null
-                  ? viewModel.evaluarRespuesta
-                  : null,
+              onPressed: () {
+                print(
+                    'Botón "Enviar respuesta" presionado. Índice: ${viewModel.currentQuestionIndex}');
+                if (viewModel.respuestaSeleccionada != null) {
+                  viewModel.evaluarRespuesta();
+                } else {
+                  print('No se seleccionó ninguna respuesta');
+                }
+              },
               child: const Text('Enviar respuesta'),
             ),
             const SizedBox(height: 20),

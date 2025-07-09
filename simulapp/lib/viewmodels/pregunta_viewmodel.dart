@@ -15,6 +15,7 @@ class QuestionViewModel extends ChangeNotifier {
   List<Question> _preguntas = [];
   String? _respuestaSeleccionada;
   final List<String?> _respuestasSeleccionadas = [];
+  bool _examenFinalizado = false;
 
   QuestionViewModel(this.tipoExamen) {
     _cargarPreguntas();
@@ -30,6 +31,7 @@ class QuestionViewModel extends ChangeNotifier {
   List<String?> get respuestasSeleccionadas => _respuestasSeleccionadas;
   String? get respuestaSeleccionada => _respuestaSeleccionada;
   List<Question> get preguntas => _preguntas;
+  bool get examenFinalizado => _examenFinalizado;
 
   Future<void> _cargarPreguntas() async {
     try {
@@ -61,23 +63,35 @@ class QuestionViewModel extends ChangeNotifier {
 
   void seleccionarRespuesta(String? respuesta) {
     _respuestaSeleccionada = respuesta;
+    print('Respuesta seleccionada: $_respuestaSeleccionada');
     notifyListeners();
   }
 
   void evaluarRespuesta() {
-    if (_respuestaSeleccionada == currentQuestion?.respuesta) {
-      _puntaje += _puntosPorPregunta.toInt();
-    } else {
-      _puntaje -= 1;
+    print('Evaluando respuesta. Índice actual: $_currentQuestionIndex, Total: $_totalPreguntas, Respuesta seleccionada: $_respuestaSeleccionada');
+    try {
+      if (_respuestaSeleccionada != null && currentQuestion != null) {
+        if (_respuestaSeleccionada == currentQuestion!.respuesta) {
+          _puntaje += _puntosPorPregunta.toInt();
+        } else {
+          _puntaje -= 1;
+        }
+        _respuestasSeleccionadas.add(_respuestaSeleccionada);
+        _siguientePregunta();
+      } else {
+        print('Error: Respuesta seleccionada o currentQuestion es null');
+      }
+    } catch (e) {
+      print('Excepción en evaluarRespuesta: $e');
     }
-    _respuestasSeleccionadas.add(_respuestaSeleccionada);
-    _siguientePregunta();
   }
 
   void _siguientePregunta() {
+    print('Intentando avanzar. Índice: $_currentQuestionIndex, Total: $_totalPreguntas');
     if (_currentQuestionIndex < _totalPreguntas - 1) {
       _currentQuestionIndex++;
       _respuestaSeleccionada = null;
+      print('Avanzando a pregunta ${_currentQuestionIndex + 1} de $totalPreguntas');
       notifyListeners();
     } else {
       _finalizarExamen();
@@ -86,7 +100,8 @@ class QuestionViewModel extends ChangeNotifier {
 
   void _finalizarExamen() {
     double puntajeMinimoParaAprobar = 0.55 * 20;
-    bool aprobado = _puntaje >= puntajeMinimoParaAprobar;
-    // Navigation handled in View
+    _examenFinalizado = true;
+    print('Examen finalizado. Puntaje: $_puntaje, Aprobado: ${_puntaje >= puntajeMinimoParaAprobar}');
+    notifyListeners();
   }
 }
