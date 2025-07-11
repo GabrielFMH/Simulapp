@@ -81,7 +81,7 @@ class _ExamenScreenContentState extends State<_ExamenScreenContent> {
                 style: TextStyle(color: Colors.black))),
         body: Center(
             child: Text(viewModel.errorMessage!,
-                style: TextStyle(color: Colors.black))),
+                style: const TextStyle(color: Colors.black))),
       );
     }
 

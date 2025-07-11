@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'views/login.dart';
+import 'views/profile.dart';
 //import 'src/iu/login.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,11 +23,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Flutter Firebase Auth',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: const LoginView(), // La página de login
+      routes: {
+        '/': (context) => const UserProfile(),
+        '/login': (context) => const LoginView(),
+      },
+      initialRoute: '/login',
     );
   }
 }

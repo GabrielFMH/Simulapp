@@ -12,7 +12,20 @@
           "package_name": "com.simulapp.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "650312010960-q0qh8k2r8iv5faghd8ncd71v88d3u5qc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simulapp.app",
+            "certificate_hash": "9302d9897dfbecc2af9b1d567d81d577078d412f"
+          }
+        },
+        {
+          "client_id": "650312010960-glc9f8c1pd71m4algm18u6jnitun6vj5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAhJ9wplQ5PMg8ptgKmZzqdAzXLYyhLbkw"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650312010960-glc9f8c1pd71m4algm18u6jnitun6vj5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "650312010960-v1kvo7bc882b5qepifu84mb2o2ogojlt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.simulapp"
+              }
+            }
+          ]
         }
       }
     }
