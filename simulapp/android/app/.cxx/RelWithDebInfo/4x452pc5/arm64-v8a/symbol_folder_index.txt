@@ -1,0 +1,1 @@
+C:\Users\GaboDesktop\Documents\GitHub\Simulapp\simulapp\build\app\intermediates\cxx\RelWithDebInfo\4x452pc5\obj\arm64-v8a
