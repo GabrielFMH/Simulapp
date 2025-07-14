@@ -39,5 +39,6 @@ flutter:
     - assets/images/ECPE.jpg
     - assets/images/IBT.jpg
     - assets/images/ITP.jpg
+    - assets/images/MET.jpg
     - assets/data.json
     - .env

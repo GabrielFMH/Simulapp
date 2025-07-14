@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'views/login.dart';
-import 'views/profile.dart';
 //import 'src/iu/login.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -30,7 +29,6 @@ class MyApp extends StatelessWidget {
       ),
       home: const LoginView(), // La página de login
       routes: {
-        '/': (context) => const UserProfile(),
         '/login': (context) => const LoginView(),
       },
       initialRoute: '/login',

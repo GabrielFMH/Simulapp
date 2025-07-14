@@ -166,6 +166,12 @@ class ExamenesList extends StatelessWidget {
               child: Image.asset(
                 examen.imagen,
                 fit: BoxFit.cover,
+                // --- MODIFICACIONES AQUÍ ---
+                cacheWidth:
+                    64, // Decodifica la imagen a un máximo de 128px de ancho
+                cacheHeight:
+                    64, // Decodifica la imagen a un máximo de 128px de alto
+                // -------------------------
               ),
             ),
             title: Text(
