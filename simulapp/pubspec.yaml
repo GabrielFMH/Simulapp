@@ -40,5 +40,6 @@ flutter:
     - assets/images/IBT.jpg
     - assets/images/ITP.jpg
     - assets/images/MET.jpg
+    - assets/images/google_logo.webp
     - assets/data.json
     - .env

@@ -19,11 +19,13 @@ class Question {
   factory Question.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Question(
-      enunciado: data['enunciado'] ?? '',
-      opciones: List<String>.from(data['opciones'] ?? []),
-      respuesta: data['respuesta'] ?? '',
-      tipo: data['tipo'] ?? '',
-      examen: data['examen'] ?? '',
+      enunciado: data['enunciado'] as String? ?? '',
+      opciones: (data['opciones'] is List)
+          ? List<String>.from(data['opciones'].map((x) => x.toString()))
+          : [],
+      respuesta: data['respuesta'] as String? ?? '',
+      tipo: data['tipo'] as String? ?? '',
+      examen: data['examen'] as String? ?? '',
     );
   }
 }

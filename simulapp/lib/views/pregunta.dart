@@ -152,40 +152,49 @@ class _ExamenScreenContentState extends State<_ExamenScreenContent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              currentQuestion.enunciado,
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+            SizedBox(
+              height: MediaQuery.of(context).size.height *
+                  0.35, // Máximo 25% de la pantalla
+              child: SingleChildScrollView(
+                child: Text(
+                  currentQuestion.enunciado,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 20),
-            Column(
-              children: currentQuestion.opciones.map((opcion) {
-                final isSelected = viewModel.respuestaSeleccionada == opcion;
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4.0),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? const Color.fromARGB(255, 42, 181, 245)
-                        : Colors.white,
-                    border: Border.all(color: Colors.lightBlue),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: RadioListTile<String>(
-                    title: Text(opcion,
-                        style: const TextStyle(color: Colors.black)),
-                    value: opcion,
-                    groupValue: viewModel.respuestaSeleccionada,
-                    activeColor: Colors.white,
-                    selectedTileColor: Colors.lightBlue,
-                    onChanged: (value) {
-                      print('Opción seleccionada: $value');
-                      viewModel.seleccionarRespuesta(value);
-                    },
-                  ),
-                );
-              }).toList(),
+            Expanded(
+              child: Column(
+                children: currentQuestion.opciones.map((opcion) {
+                  final isSelected = viewModel.respuestaSeleccionada == opcion;
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4.0),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? const Color.fromARGB(255, 42, 181, 245)
+                          : Colors.white,
+                      border: Border.all(color: Colors.lightBlue),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: RadioListTile<String>(
+                      title: Text(opcion,
+                          style: const TextStyle(color: Colors.black)),
+                      value: opcion,
+                      groupValue: viewModel.respuestaSeleccionada,
+                      activeColor: Colors.white,
+                      selectedTileColor: Colors.lightBlue,
+                      onChanged: (value) {
+                        print('Opción seleccionada: $value');
+                        viewModel.seleccionarRespuesta(value);
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(

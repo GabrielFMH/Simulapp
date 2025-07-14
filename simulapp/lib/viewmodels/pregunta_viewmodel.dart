@@ -38,6 +38,7 @@ class QuestionViewModel extends ChangeNotifier {
       QuerySnapshot querySnapshot = await _firestore
           .collection('preguntas')
           .where('examen', isEqualTo: tipoExamen)
+          .limit(30)
           .get();
 
       print('Número de preguntas encontradas: ${querySnapshot.docs.length}');
@@ -67,7 +68,8 @@ class QuestionViewModel extends ChangeNotifier {
   }
 
   void evaluarRespuesta() {
-    print('Evaluando respuesta. Índice actual: $_currentQuestionIndex, Total: $_totalPreguntas, Respuesta seleccionada: $_respuestaSeleccionada');
+    print(
+        'Evaluando respuesta. Índice actual: $_currentQuestionIndex, Total: $_totalPreguntas, Respuesta seleccionada: $_respuestaSeleccionada');
     try {
       if (_respuestaSeleccionada != null && currentQuestion != null) {
         // Normalizar las cadenas para comparación (quitar espacios y convertir a minúsculas)
@@ -91,11 +93,13 @@ class QuestionViewModel extends ChangeNotifier {
   }
 
   void _siguientePregunta() {
-    print('Intentando avanzar. Índice: $_currentQuestionIndex, Total: $_totalPreguntas');
+    print(
+        'Intentando avanzar. Índice: $_currentQuestionIndex, Total: $_totalPreguntas');
     if (_currentQuestionIndex < _totalPreguntas - 1) {
       _currentQuestionIndex++;
       _respuestaSeleccionada = null;
-      print('Avanzando a pregunta ${_currentQuestionIndex + 1} de $totalPreguntas');
+      print(
+          'Avanzando a pregunta ${_currentQuestionIndex + 1} de $totalPreguntas');
       notifyListeners();
     } else {
       _finalizarExamen();
@@ -105,7 +109,8 @@ class QuestionViewModel extends ChangeNotifier {
   void _finalizarExamen() {
     double puntajeMinimoParaAprobar = 0.55 * 20;
     _examenFinalizado = true;
-    print('Examen finalizado. Puntaje: $_puntaje, Aprobado: ${_puntaje >= puntajeMinimoParaAprobar}');
+    print(
+        'Examen finalizado. Puntaje: $_puntaje, Aprobado: ${_puntaje >= puntajeMinimoParaAprobar}');
     notifyListeners();
   }
 }
