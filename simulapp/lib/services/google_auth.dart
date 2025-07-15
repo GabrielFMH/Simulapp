@@ -34,55 +34,79 @@ class GoogleAuth {
     _authorizationController.add(authorized);
   }
 
-  Future<GoogleSignInAccount?> signIn() async {
+  /// Inicia sesión con Google y autentica en Firebase.
+  /// Retorna null si la operación fue exitosa, o un String con el mensaje de error.
+  Future<String?> signIn() async {
     try {
-      final user = await _googleSignIn.signIn();
-      if (user != null) {
-        // Obtener el token de ID de Google
-        final googleAuth = await user.authentication;
-        final String? idToken = googleAuth.idToken;
-
-        if (idToken != null) {
-          // Crear una credencial de Firebase con el token de ID de Google
-          final AuthCredential credential = GoogleAuthProvider.credential(
-            idToken: idToken,
-            accessToken: googleAuth.accessToken,
-          );
-
-          // Autenticar al usuario en Firebase con la credencial
-          final UserCredential authResult =
-              await FirebaseAuth.instance.signInWithCredential(credential);
-
-          // Crear el usuario en Firestore si no existe
-          await _createUserInFirestore(authResult.user!);
-        }
+      final GoogleSignInAccount? user = await _googleSignIn.signIn();
+      
+      if (user == null) {
+        // El usuario canceló el inicio de sesión
+        return 'Inicio de sesión con Google cancelado.';
       }
-      return user;
+
+      // Obtener el token de ID de Google
+      final GoogleSignInAuthentication googleAuth = await user.authentication;
+      final String? idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        return 'No se pudo obtener el ID Token de Google.';
+      }
+
+      // Crear una credencial de Firebase con el token de ID de Google
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: idToken,
+        accessToken: googleAuth.accessToken, // accessToken también es útil
+      );
+
+      // Autenticar al usuario en Firebase con la credencial
+      final UserCredential authResult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Si la autenticación de Firebase fue exitosa, crear el usuario en Firestore
+      if (authResult.user != null) {
+        await _createUserInFirestore(authResult.user!);
+        return null; // Éxito: retorna null
+      } else {
+        return 'No se pudo autenticar el usuario en Firebase.';
+      }
+    } on FirebaseAuthException catch (e) {
+      // Errores específicos de Firebase Auth
+      print('Error de Firebase Auth durante el inicio de sesión con Google: ${e.code} - ${e.message}');
+      return 'Error de autenticación: ${e.message}';
     } catch (error) {
-      print('Error durante el inicio de sesión con Google: $error');
-      return null;
+      // Otros errores generales
+      print('Error general durante el inicio de sesión con Google: $error');
+      return 'Error desconocido: $error';
     }
   }
 
+  /// Crea o actualiza el documento del usuario en Firestore.
   Future<void> _createUserInFirestore(User user) async {
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
+    final userDocRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final userDoc = await userDocRef.get();
 
     if (!userDoc.exists) {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      // Si el documento no existe, crearlo
+      await userDocRef.set({
         'email': user.email,
-        'username': user.displayName ?? 'No username',
-        'createdAt': DateTime.now(),
+        'username': user.displayName ?? user.email?.split('@')[0] ?? 'No username', // Intenta usar el nombre de usuario de Google, o parte del email
+        'createdAt': FieldValue.serverTimestamp(), // Usa un timestamp del servidor
         'photoUrl': user.photoURL,
       });
+    } else {
+      // Si el documento ya existe, puedes actualizarlo si es necesario (ej. photoURL, displayName)
+      // Por ahora, no haremos nada si ya existe, pero es una opción.
+      // await userDocRef.update({
+      //   'lastLogin': FieldValue.serverTimestamp(),
+      // });
     }
   }
 
+  /// Cierra la sesión de Google y Firebase.
   Future<void> signOut() async {
-    await _googleSignIn.disconnect();
-    await FirebaseAuth.instance.signOut(); // Cerrar sesión en Firebase también
+    await _googleSignIn.disconnect(); // Desconecta la cuenta de Google
+    await FirebaseAuth.instance.signOut(); // Cierra sesión en Firebase
   }
 
   Future<bool> requestScopes() async {

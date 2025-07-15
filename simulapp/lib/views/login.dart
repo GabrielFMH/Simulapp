@@ -27,11 +27,13 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
+    // Definir un ancho común para los botones
+    const double commonButtonWidth = 250.0; // Puedes ajustar este valor
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 42, 186, 253), // Fondo celeste
-
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
@@ -97,105 +99,110 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
               const SizedBox(height: 30),
-              ValueListenableBuilder<bool>(
-                valueListenable: _viewModel.isLoading,
-                builder: (context, isLoading, _) {
-                  return ElevatedButton(
-                    onPressed: isLoading
-                        ? null
-                        : () async {
-                            final success = await _viewModel.login(
-                              _emailController.text,
-                              _passwordController.text,
-                            );
-                            if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Login exitoso')),
+              SizedBox(
+                width: commonButtonWidth, // Aplica el ancho común
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: _viewModel.isLoading,
+                  builder: (context, isLoading, _) {
+                    return ElevatedButton(
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              final success = await _viewModel.login(
+                                _emailController.text,
+                                _passwordController.text,
                               );
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChangeNotifierProvider(
-                                    create: (_) => ExamenListViewModel(),
-                                    child: const ExamenesScreen(),
+                              if (success) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Login exitoso')),
+                                );
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChangeNotifierProvider(
+                                      create: (_) => ExamenListViewModel(),
+                                      child: const ExamenesScreen(),
+                                    ),
                                   ),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Error al iniciar sesión')),
-                              );
-                            }
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white, // Botón blanco
-                      foregroundColor: Colors.lightBlue, // Texto/iconos celeste
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Error al iniciar sesión')),
+                                );
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white, // Botón blanco
+                        foregroundColor: Colors.lightBlue, // Texto/iconos celeste
+                        padding: const EdgeInsets.symmetric(vertical: 15), // Ajusta solo el padding vertical
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                    ),
-                    child: isLoading
-                        ? const CircularProgressIndicator(
-                            color: Colors.lightBlue)
-                        : const Text(
-                            'Login',
-                            style: TextStyle(
-                                fontSize: 18, color: Colors.lightBlue),
-                          ),
-                  );
-                },
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.lightBlue)
+                          : const Text(
+                              'Login',
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.lightBlue),
+                            ),
+                    );
+                  },
+                ),
               ),
               const SizedBox(height: 20),
               // Botón de Google Sign-In
-              ElevatedButton(
-                onPressed: () async {
-                  final user = await _googleAuth.signIn();
-                  if (user != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Login con Google exitoso')),
-                    );
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                          create: (_) => ExamenListViewModel(),
-                          child: const ExamenesScreen(),
+              SizedBox(
+                width: commonButtonWidth, // Aplica el ancho común
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final user = await _googleAuth.signIn();
+                    if (user != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Login con Google exitoso')),
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                            create: (_) => ExamenListViewModel(),
+                            child: const ExamenesScreen(),
+                          ),
                         ),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Error al iniciar sesión con Google')),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black, // Fondo negro
-                  foregroundColor: Colors.white, // Texto/iconos blancos
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 50, vertical: 15), // Mismo tamaño que el botón de Login
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Error al iniciar sesión con Google')),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // Fondo negro
+                    foregroundColor: Colors.white, // Texto/iconos blancos
+                    padding: const EdgeInsets.symmetric(vertical: 15), // Ajusta solo el padding vertical
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/google_logo.webp', // Asegúrate de agregar el logo de Google
-                      height: 24,
-                      width: 24,
-                      color: Colors.white, // Ajusta el color si es necesario
-                    ),
-                    const SizedBox(width: 10),
-                    const Text(
-                      'Iniciar con Google',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/google_logo.webp', // Asegúrate de agregar el logo de Google
+                        height: 24,
+                        width: 24,
+                        // color: Colors.white, // Si el logo ya es blanco, no necesitas esto
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Iniciar con Google',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
